@@ -1,132 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Patintero Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Patintero Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <style>
-    html,body { height:100%; margin:0; padding:0; }
-    body {
-      font-family: "Press Start 2P", cursive;
-      background: url("patintero-bg.png") no-repeat center center fixed;
-      background-size: cover;
-      overflow: hidden;
-    }
+<style>
+html,body { height: 100%; margin:0; padding:0; }
+body {
+font-family: "Press Start 2P", cursive;
+background: url("patintero-bg.png") no-repeat center center fixed;
+background-size: cover;
+overflow: hidden;
+}
 
-    .overlay-card {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90vw;
-      max-width: 600px;
-      background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(5px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 5vw;
-      z-index: 100;
-   }
+.overlay-card {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 90vw;
+max-width: 600px;
+background: rgba(0,0,0,0.2);
+backdrop-filter: blur(5px);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 5vw;
+z-index: 100;
+}
 
-    .overlay-card h2 {
-      margin-top: 0;
-      color: yellow;
-      font-size: 5vw;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0 #000;
-    }
+.overlay-card h2 {
+margin-top: 0;
+color: yellow;
+font-size: 5vw;
+letter-spacing: 2px;
+text-shadow: 2px 2px 0 #000;
+}
 
-    .overlay-card p {
-      font-size: 3vw;
-      margin: 5vw 0;
-      line-height: 1.6em;
-      color: #fff;
-      text-shadow: 1px 1px 0 #000;
-      max-width: 90vw;
-    }
+.overlay-card p {
+font-size: 3vw;
+margin: 5vw 0;
+line-height: 1.6em;
+color: #fff;
+text-shadow: 1px 1px 0 #000;
+max-width: 90vw;
+}
 
-    #startBtn {
-      padding: 3vw 6vw;
-      font-size: 3vw;
-      background: #2196f3;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      box-shadow: 0 4px 0 #0d47a1;
-      z-index: 101;
-      pointer-events: auto;
-    }
+.overlay-card input {
+padding: 3vw;
+font-size: 3vw;
+width: 70%;
+margin: 2vw 0;
+border: 2px solid #fff;
+border-radius: 8px;
+background: rgba(255,255,255,0.9);
+font-family: inherit;
+text-align: center;
+}
 
-    #startBtn:hover {
-      background: #1976d2;
-      transform: scale(1.06);
-    }
+#startBtn, .submit-btn {
+padding: 3vw 6vw;
+font-size: 3vw;
+background: #2196f3;
+color: #fff;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.18s ease;
+box-shadow: 0 4px 0 #0d47a1;
+z-index: 101;
+pointer-events: auto;
+margin: 2vw 0;
+}
 
-    /* CHARACTER SPRITE SYSTEM */
-    :root {
-      --pixel-size: 2;
-    }
+#startBtn:hover, .submit-btn:hover {
+background: #1976d2;
+transform: scale(1.06);
+}
 
-    .Character {
-      width: calc(32px * var(--pixel-size));
-      height: calc(32px * var(--pixel-size));
-      overflow: hidden;
-      position: absolute;
-    }
+/* UI Elements */
+.top-ui {
+  position: fixed;
+  top: 10px;
+  z-index: 1000;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+  font-size: clamp(8px, 2vw, 16px);
+  line-height: 1.2;
+}
 
-    .Character_spritesheet {
-      animation: moveSpritesheet 1s steps(4) infinite;
-      width: calc(128px * var(--pixel-size));
-      position: absolute;
-    }
-    .Character_shadow {
-      position: absolute;
-      width: calc(32px * var(--pixel-size));
-      height: calc(32px * var(--pixel-size));
-    }
+#ui-left {
+  left: 10px;
+}
 
-    .pixelart {
-      image-rendering: pixelated;
-    }
+#ui-right {
+  right: 10px;
+  text-align: right;
+}
+
+#ui-right h3 {
+  color: yellow;
+  font-size: clamp(12px, 4vw, 24px);
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* CHARACTER SPRITE SYSTEM */
+:root {
+--pixel-size: 2;
+}
+
+.Character {
+width: calc(32px * var(--pixel-size));
+height: calc(32px * var(--pixel-size));
+overflow: hidden;
+position: absolute;
+}
+
+.Character_spritesheet {
+animation: moveSpritesheet 1s steps(4) infinite;
+width: calc(128px * var(--pixel-size));
+position: absolute;
+}
+.Character_shadow {
+position: absolute;
+width: calc(32px * var(--pixel-size));
+height: calc(32px * var(--pixel-size));
+}
+
+.pixelart {
+image-rendering: pixelated;
+}
 
 .face-down { top: 0; }
 .face-right { top: calc(-32px * var(--pixel-size)); }
 .face-up { top: calc(-64px * var(--pixel-size)); }
 .face-left { top: calc(-96px * var(--pixel-size)); }
 
-    @keyframes moveSpritesheet {
-      from { transform: translate3d(0px,0,0) }
-      to { transform: translate3d(-100%,0,0) }
-    }
-  </style>
+@keyframes moveSpritesheet {
+from { transform: translate3d(0px,0,0) }
+to { transform: translate3d(-100%,0,0) }
+}
+</style>
 </head>
 <body>
-  <!-- Home Screen -->
-  <div class="overlay-card" id="homeScreen">
-    <h2>Patintero</h2>
-    <p>
-      🏃 Relive the excitement of a Filipino
-      childhood favorite! Cross the lines and avoid the taggers.<br><br>
-      👉 Use <b>ARROW KEYS</b> or <b>TAP</b> to move.<br>
-      🏁 Reach the opposite side without being tagged!
-    </p>
-    <button id="startBtn">▶ START GAME</button>
-  </div>
+<!-- Home Screen -->
+<div class="overlay-card" id="homeScreen">
+<h2>Patintero</h2>
+<p>
+🏃 Relive the excitement of a Filipino
+childhood favorite! Cross the lines and avoid the taggers.<br><br>
+👉 Use <b>ARROW KEYS / WASD</b> or <b>TAP</b> to move.<br>
+🏁 Reach the opposite side without being tagged!
+</p>
+<button id="startBtn">▶ START GAME</button>
+</div>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("startBtn");
-  startBtn.addEventListener("click", () => {
-    document.getElementById("homeScreen").remove();
+const startBtn = document.getElementById("startBtn");
+let playerName = '';
+let currentLevel = 1;
+let maxLevel = 5;
+let gameEnded = false;
+let x, y;
+let screenW, screenH;
+let blockers = [];
+let linesY = [];
 
-    document.body.style.background = "url('playground.png') no-repeat center center fixed";
-    document.body.style.backgroundSize = "cover";
+startBtn.addEventListener("click", () => {
+  document.getElementById("homeScreen").style.display = "none";
+
+  // Username Input Overlay
+  const nameOverlay = document.createElement("div");
+  nameOverlay.className = "overlay-card";
+  nameOverlay.id = "nameOverlay";
+  nameOverlay.innerHTML = `
+    <h2>Enter Player Name</h2>
+    <p>To start the game, please enter your username.</p>
+    <input id="username" type="text" placeholder="Your Name" maxlength="20">
+    <button class="submit-btn" id="submitName">▶ START GAME</button>
+  `;
+  document.body.appendChild(nameOverlay);
+
+  const submitNameBtn = document.getElementById("submitName");
+  const usernameInput = document.getElementById("username");
+
+  submitNameBtn.addEventListener("click", () => {
+    const name = usernameInput.value.trim();
+    if (!name) {
+      alert("Please enter a username to start the game!");
+      return;
+    }
+    playerName = name;
+
+    // Store in JSON for API (localStorage example; can be sent to API later)
+    const playerData = {
+      name: playerName,
+      currentLevel: currentLevel,
+      maxLevel: maxLevel
+    };
+    localStorage.setItem('patinteroPlayer', JSON.stringify(playerData));
+
+    nameOverlay.remove();
+
+    // Initialize Game
+    initGame();
+  });
+
+  // Allow Enter key for username
+  usernameInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      submitNameBtn.click();
+    }
+  });
+});
+
+function initGame() {
+  screenW = window.innerWidth;
+  screenH = window.innerHeight;
+
+  document.body.style.background = "url('playground.png') no-repeat center center fixed";
+  document.body.style.backgroundSize = "cover";
 
   // UI Elements
   const uiLeft = document.createElement("div");
@@ -166,105 +264,169 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.appendChild(player);
 
-    // === BLOCKER SPRITE ===
+  // Create initial blockers
+  createBlockersForLevel(currentLevel);
+
+  // === PLAYER MOVEMENT ===
+  gameEnded = false;
+
+  function movePlayer(dx, dy, direction) {
+    if (gameEnded) return;
+    x += dx;
+    y += dy;
+    // Bounds
+    const playerSize = 64; // 32 * 2
+    x = Math.max(0, Math.min(screenW - playerSize, x));
+    y = Math.max(0, Math.min(screenH - playerSize, y));
+    const sprite = player.querySelector(".Character_spritesheet");
+    sprite.className = `Character_spritesheet pixelart ${direction}`;
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+  }
+
+  window.addEventListener("keydown", e => {
+    if (gameEnded) return;
+    if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") movePlayer(-20, 0, "face-left");
+    if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") movePlayer(20, 0, "face-right");
+    if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") movePlayer(0, -20, "face-up");
+    if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") movePlayer(0, 20, "face-down");
+  });
+
+  // Improved touch controls (relative to player position)
+  document.body.addEventListener("touchstart", e => {
+    if (gameEnded) return;
+    e.preventDefault();
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const playerCenterX = x + 32;
+    const playerCenterY = y + 32;
+    const relX = touchX - playerCenterX;
+    const relY = touchY - playerCenterY;
+    if (Math.abs(relY) > Math.abs(relX)) {
+      if (relY < 0) movePlayer(0, -20, "face-up");
+      else movePlayer(0, 20, "face-down");
+    } else {
+      if (relX < 0) movePlayer(-20, 0, "face-left");
+      else movePlayer(20, 0, "face-right");
+    }
+  });
+
+  // === BLOCKER CHASE + GAME OVER ===
+  setInterval(() => {
+    if (gameEnded) return;
+
+    const playerX = x;
+    let tagged = false;
+
+    blockers.forEach(blk => {
+      const blockerX = parseInt(blk.style.left);
+      const blockerY = parseInt(blk.style.top);
+      const dx = playerX - blockerX;
+      const dy = y - blockerY;
+      const step = 20;
+
+      let newBlockerX = blockerX;
+
+      // Blocker moves left/right only
+      if (Math.abs(dx) > step) {
+        newBlockerX = blockerX + step * Math.sign(dx);
+        blk.style.left = newBlockerX + "px";
+      }
+
+      // Keep blocker on the line
+      blk.style.top = blockerY + "px";
+
+      // Face towards player
+      let faceDir;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        faceDir = dy > 0 ? "face-down" : "face-up";
+      } else {
+        faceDir = dx > 0 ? "face-right" : "face-left";
+      }
+      const sprite = blk.querySelector(".Character_spritesheet");
+      sprite.className = `Character_spritesheet pixelart ${faceDir}`;
+
+      // Collision detection (using new position)
+      const distanceX = Math.abs(playerX - newBlockerX);
+      const distanceY = Math.abs(y - blockerY);
+      const collisionThreshold = 40;
+
+      if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+        tagged = true;
+      }
+    });
+
+    if (tagged) {
+      gameEnded = true;
+      const gameOver = document.createElement("div");
+      gameOver.className = "overlay-card";
+      gameOver.innerHTML = `
+        <h2>😵 GAME OVER!</h2>
+        <p>You were tagged at Level ${currentLevel}!</p>
+        <button class="submit-btn" onclick="location.reload()">🔁 Restart</button>
+      `;
+      document.body.appendChild(gameOver);
+      return;
+    }
+
+    // ✅ Finish line check (pass last blocker)
+    if (y < 20 && !gameEnded) {
+      gameEnded = true;
+      if (currentLevel < maxLevel) {
+        // Proceed to next level
+        currentLevel++;
+        // Reset player
+        x = screenW * 0.5;
+        y = screenH * 0.85;
+        player.style.left = x + "px";
+        player.style.top = y + "px";
+        // Recreate blockers
+        createBlockersForLevel(currentLevel);
+        // Update UI
+        updatePlayerInfo();
+        // Resume
+        gameEnded = false;
+      } else {
+        // Game complete
+        const winScreen = document.createElement("div");
+        winScreen.className = "overlay-card";
+        winScreen.innerHTML = `
+          <h2>🎉 YOU WIN!</h2>
+          <p>You completed all ${maxLevel} levels!</p>
+          <button class="submit-btn" onclick="location.reload()">🔁 Play Again</button>
+        `;
+        document.body.appendChild(winScreen);
+      }
+    }
+  }, 200);
+}
+
+function createBlockersForLevel(level) {
+  // Remove existing blockers
+  blockers.forEach(blk => blk.remove());
+  blockers = [];
+
+  for (let i = 0; i < level; i++) {
     const blocker = document.createElement("div");
     blocker.className = "Character";
-    blocker.style.left = screenW * 0.4 + "px";
-    blocker.style.top = screenH * 0.2 + "px";
+    blocker.style.left = screenW * 0.5 + "px";
+    blocker.style.top = linesY[i] + "px";
     blocker.setAttribute("facing", "down");
     blocker.innerHTML = `
       <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
       <img class="Character_spritesheet pixelart face-down" src="blocker.png" />
     `;
     document.body.appendChild(blocker);
-
-    // === PLAYER MOVEMENT ===
-    let x = screenW * 0.4, y = screenH * 0.8;
-    let gameEnded = false;
-
-    function movePlayer(dx, dy, direction) {
-      x += dx;
-      y += dy;
-      const sprite = player.querySelector(".Character_spritesheet");
-      sprite.className = `Character_spritesheet pixelart ${direction}`;
-      player.style.left = x + "px";
-      player.style.top = y + "px";
-    }
-
-    window.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
-  if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
-  if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
-});
-
-    document.body.addEventListener("touchstart", e => {
-  const touchX = e.touches[0].clientX;
-  const touchY = e.touches[0].clientY;
-  const centerX = screenW / 2;
-  const centerY = screenH / 2;
-
-  if (touchY < centerY) movePlayer(0, -20, "face-up");
-  else if (touchX < centerX) movePlayer(-20, 0, "face-left");
-  else movePlayer(20, 0, "face-right");
-});
-
-    // === BLOCKER CHASE + GAME OVER ===
-    let blockerY = screenH * 0.5; // blocker guards this line
-blocker.style.top = blockerY + "px";
-
-setInterval(() => {
-  if (gameEnded) return;
-
-  const playerX = x;
-  const blockerX = parseInt(blocker.style.left);
-  const dx = playerX - blockerX;
-  const step = 5;
-
-  // Blocker moves left/right only
-  if (Math.abs(dx) > step) {
-    blocker.style.left = blockerX + step * Math.sign(dx) + "px";
+    blockers.push(blocker);
   }
+}
 
-  // Keep blocker on the line
-  blocker.style.top = blockerY + "px";
-
-  // Face direction
-  const sprite = blocker.querySelector(".Character_spritesheet");
-  sprite.className = dx > 0
-    ? "Character_spritesheet pixelart face-right"
-    : "Character_spritesheet pixelart face-left";
-
-  // Collision detection
-  const distanceX = Math.abs(playerX - blockerX);
-  const distanceY = Math.abs(y - blockerY);
-  const collisionThreshold = 30;
-
-  if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
-    gameEnded = true;
-    const gameOver = document.createElement("div");
-    gameOver.className = "overlay-card";
-    gameOver.innerHTML = `
-      <h2>😵 GAME OVER!</h2>
-      <p>You were tagged!</p>
-      <button onclick="location.reload()">🔁 Restart</button>
-    `;
-    document.body.appendChild(gameOver);
+function updatePlayerInfo() {
+  const playerInfo = document.getElementById("playerInfo");
+  if (playerInfo) {
+    playerInfo.innerHTML = `${playerName}<br>Level ${currentLevel}/${maxLevel}`;
   }
-
-  // ✅ Finish line check
-  if (y < 50 && !gameEnded) {
-    gameEnded = true;
-    const winScreen = document.createElement("div");
-    winScreen.className = "overlay-card";
-    winScreen.innerHTML = `
-      <h2>🎉 YOU WIN!</h2>
-      <p>You crossed the line!</p>
-      <button onclick="location.reload()">🔁 Play Again</button>
-    `;
-    document.body.appendChild(winScreen);
-  }
-}, 200);
-  });
+}
 });
 </script>
 </body>
