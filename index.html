@@ -7,6 +7,57 @@
   <title>Patintero Game</title>
 </head>
 <body>
+  <h1>Patintero Game</h1>
+  <div id="levelDisplay">Level 1</div>
+
+  <div id="gameArea">
+    <div id="player"> <!--addan panig img-->
+    </div>
+  </div>
+  <p id="message"></p>
+  <button id="startBtn">Start Game</button>
+
+  <script> /* usbonon pani */
+    const player = document.getElementById('player');
+    const gameArea = document.getElementById('gameArea');
+    const startBtn = document.getElementById('startBtn');
+    const message = document.getElementById('message');
+    const levelDisplay = document.getElementById('levelDisplay');
+
+    let playerPos = { x = 135, y = 470 };
+    let blockers = [];
+    let gameInterval;
+    let level = 1;
+    let speed = 2;
+
+    const gameWidth = 300;
+    const gameHeight = 500;
+
+    /* arrow keys */
+    document.addEventListener('keydown', e => {
+  switch(e.key) {
+    case 'ArrowUp':
+      if(playerPos.y > 0) playerPos.y -= 10;
+      break;
+    case 'ArrowDown':
+      if(playerPos.y < gameHeight - 30) playerPos.y += 10;
+      break;
+    case 'ArrowLeft':
+      if(playerPos.x > 0) playerPos.x -= 10;
+      break;
+    case 'ArrowRight':
+      if(playerPos.x < gameWidth - 30) playerPos.x += 10;
+      break;
+  }
+      
+   player.style.top = playerPos.y + 'px';
+   player.style.left = playerPos.x + 'px';
+   checkWin();
+});
+
+    // matog nako bye im sick :') 
+ 
   
+  </script>
 </body>
 </html>
