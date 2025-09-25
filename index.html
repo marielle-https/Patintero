@@ -50,6 +50,21 @@ text-shadow: 1px 1px 0 #000;
 max-width: 90vw;
 }
 
+.overlay-card ul {
+text-align: left;
+color: #fff;
+font-size: 2.5vw;
+max-width: 80%;
+margin: 2vw 0;
+list-style: none;
+padding: 0;
+}
+
+.overlay-card li {
+margin: 1vw 0;
+text-shadow: 1px 1px 0 #000;
+}
+
 .overlay-card input {
 padding: 3vw;
 font-size: 3vw;
@@ -62,7 +77,7 @@ font-family: inherit;
 text-align: center;
 }
 
-#startBtn, .submit-btn {
+#startBtn, .submit-btn, #leaderboardBtn {
 padding: 3vw 6vw;
 font-size: 3vw;
 background: #2196f3;
@@ -77,9 +92,17 @@ pointer-events: auto;
 margin: 2vw 0;
 }
 
-#startBtn:hover, .submit-btn:hover {
-background: #1976d2;
+#leaderboardBtn {
+background: #4caf50;
+box-shadow: 0 4px 0 #388e3c;
+}
+
+#startBtn:hover, .submit-btn:hover, #leaderboardBtn:hover {
 transform: scale(1.06);
+}
+
+#leaderboardBtn:hover {
+background: #45a049;
 }
 
 /* UI Elements */
@@ -154,14 +177,16 @@ to { transform: translate3d(-100%,0,0) }
 <p>
 🏃 Relive the excitement of a Filipino
 childhood favorite! Cross the lines and avoid the taggers.<br><br>
-👉 Use <b>ARROW KEYS / WASD</b> or <b>TAP</b> to move.<br>
+👉 Use <b>ARROW KEYS / WASD</b> or <b>TAP/CLICK</b> to move.<br>
 🏁 Reach the opposite side without being tagged!
 </p>
 <button id="startBtn">▶ START GAME</button>
+<button id="leaderboardBtn">🏆 Leaderboard</button>
 </div>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 const startBtn = document.getElementById("startBtn");
+const leaderboardBtn = document.getElementById("leaderboardBtn");
 let playerName = '';
 let currentLevel = 1;
 let maxLevel = 5;
@@ -170,6 +195,54 @@ let x, y;
 let screenW, screenH;
 let blockers = [];
 let linesY = [];
+
+// ApiLeaderboard functions
+function getLeaderboard() {
+  return JSON.parse(localStorage.getItem('patinteroLeaderboard') || '[]');
+}
+
+function saveLeaderboard(leaderboard) {
+  localStorage.setItem('patinteroLeaderboard', JSON.stringify(leaderboard));
+}
+
+function updatePlayerScore(name, levelsCompleted) {
+  let lb = getLeaderboard();
+  const completed = Math.max(0, levelsCompleted);
+  let existing = lb.find(p => p.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    if (completed > existing.levelsCompleted) {
+      existing.levelsCompleted = completed;
+    }
+  } else {
+    lb.push({ name: name, levelsCompleted: completed });
+  }
+  lb.sort((a, b) => b.levelsCompleted - a.levelsCompleted || a.name.localeCompare(b.name));
+  saveLeaderboard(lb);
+}
+
+function showLeaderboard() {
+  const lb = getLeaderboard();
+  const top10 = lb.slice(0, 10);
+  let html = '<h2>🏆 Leaderboard</h2><p>Top 10 Players by Levels Completed</p><ul>';
+  if (top10.length === 0) {
+    html += '<li>No scores yet!</li>';
+  } else {
+    top10.forEach((p, i) => {
+      html += `<li>${i + 1}. ${p.name} - ${p.levelsCompleted} Levels</li>`;
+    });
+  }
+  html += '</ul><button class="submit-btn" id="closeLb">Close</button>';
+  const lbOverlay = document.createElement("div");
+  lbOverlay.className = "overlay-card";
+  lbOverlay.id = "lbOverlay";
+  lbOverlay.innerHTML = html;
+  document.body.appendChild(lbOverlay);
+  document.getElementById("closeLb").addEventListener("click", () => {
+    lbOverlay.remove();
+  });
+}
+
+leaderboardBtn.addEventListener("click", showLeaderboard);
 
 startBtn.addEventListener("click", () => {
   document.getElementById("homeScreen").style.display = "none";
@@ -311,6 +384,40 @@ function initGame() {
     }
   });
 
+  // Click/tap zones for movement (absolute screen zones)
+  // Top third: up, bottom third: down, left half middle: left, right half middle: right
+  function handleClickMove(e) {
+    if (gameEnded) return;
+    let clientX, clientY;
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    if (clientY < screenH / 3) {
+      // Top: move up
+      movePlayer(0, -20, "face-up");
+    } else if (clientY > (screenH * 2) / 3) {
+      // Bottom: move down
+      movePlayer(0, 20, "face-down");
+    } else {
+      // Middle horizontal strip: left or right
+      if (clientX < screenW / 2) {
+        movePlayer(-20, 0, "face-left");
+      } else {
+        movePlayer(20, 0, "face-right");
+      }
+    }
+  }
+
+  // Add click event for mouse
+  document.body.addEventListener("click", handleClickMove);
+
+  // Add mousedown for more responsive mouse input (optional, but adds immediacy)
+  document.body.addEventListener("mousedown", handleClickMove);
+
   // === BLOCKER CHASE + GAME OVER ===
   setInterval(() => {
     if (gameEnded) return;
@@ -358,14 +465,20 @@ function initGame() {
 
     if (tagged) {
       gameEnded = true;
+      updatePlayerScore(playerName, currentLevel - 1);
       const gameOver = document.createElement("div");
       gameOver.className = "overlay-card";
       gameOver.innerHTML = `
         <h2>😵 GAME OVER!</h2>
-        <p>You were tagged at Level ${currentLevel}!</p>
+        <p>You were tagged at Level ${currentLevel}! (Completed: ${Math.max(0, currentLevel - 1)} levels)</p>
         <button class="submit-btn" onclick="location.reload()">🔁 Restart</button>
+        <button id="viewLbAfter" class="submit-btn">🏆 View Leaderboard</button>
       `;
       document.body.appendChild(gameOver);
+      document.getElementById("viewLbAfter")?.addEventListener("click", () => {
+        gameOver.remove();
+        showLeaderboard();
+      });
       return;
     }
 
@@ -388,14 +501,20 @@ function initGame() {
         gameEnded = false;
       } else {
         // Game complete
+        updatePlayerScore(playerName, maxLevel);
         const winScreen = document.createElement("div");
         winScreen.className = "overlay-card";
         winScreen.innerHTML = `
           <h2>🎉 YOU WIN!</h2>
           <p>You completed all ${maxLevel} levels!</p>
           <button class="submit-btn" onclick="location.reload()">🔁 Play Again</button>
+          <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button>
         `;
         document.body.appendChild(winScreen);
+        document.getElementById("viewLbWin")?.addEventListener("click", () => {
+          winScreen.remove();
+          showLeaderboard();
+        });
       }
     }
   }, 200);
@@ -408,7 +527,7 @@ function createBlockersForLevel(level) {
 
   for (let i = 0; i < level; i++) {
     const blocker = document.createElement("div");
-    blocker.className = "Character";
+        blocker.className = "Character";
     blocker.style.left = screenW * 0.5 + "px";
     blocker.style.top = linesY[i] + "px";
     blocker.setAttribute("facing", "down");
