@@ -169,67 +169,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.addEventListener("keydown", e => {
-      if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
-      if (e.key === "ArrowDown") movePlayer(0, 20, "face-down");
-      if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
-      if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
-    });
+  if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
+  if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
+  if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
+});
 
     document.body.addEventListener("touchstart", e => {
-      const touchX = e.touches[0].clientX;
-      const touchY = e.touches[0].clientY;
-      const centerX = screenW / 2;
-      const centerY = screenH / 2;
+  const touchX = e.touches[0].clientX;
+  const touchY = e.touches[0].clientY;
+  const centerX = screenW / 2;
+  const centerY = screenH / 2;
 
-      if (touchY < centerY) movePlayer(0, -20, "face-up");
-      else if (touchY > centerY) movePlayer(0, 20, "face-down");
-      else if (touchX < centerX) movePlayer(-20, 0, "face-left");
-      else movePlayer(20, 0, "face-right");
-    });
+  if (touchY < centerY) movePlayer(0, -20, "face-up");
+  else if (touchX < centerX) movePlayer(-20, 0, "face-left");
+  else movePlayer(20, 0, "face-right");
+});
 
     // === BLOCKER CHASE + GAME OVER ===
-    setInterval(() => {
-      if (gameEnded) return;
+    let blockerY = screenH * 0.5; // blocker guards this line
+blocker.style.top = blockerY + "px";
 
-      const playerX = x;
-      const playerY = y;
-      const blockerX = parseInt(blocker.style.left);
-      const blockerY = parseInt(blocker.style.top);
+setInterval(() => {
+  if (gameEnded) return;
 
-      const dx = playerX - blockerX;
-      const dy = playerY - blockerY;
-      const step = 5;
+  const playerX = x;
+  const blockerX = parseInt(blocker.style.left);
+  const dx = playerX - blockerX;
+  const step = 5;
 
-      if (Math.abs(dx) > step) {
-        blocker.style.left = blockerX + step * Math.sign(dx) + "px";
-      }
-      if (Math.abs(dy) > step) {
-        blocker.style.top = blockerY + step * Math.sign(dy) + "px";
-      }
+  // Blocker moves left/right only
+  if (Math.abs(dx) > step) {
+    blocker.style.left = blockerX + step * Math.sign(dx) + "px";
+  }
 
-      const sprite = blocker.querySelector(".Character_spritesheet");
-      if (Math.abs(dx) > Math.abs(dy)) {
-        sprite.className = dx > 0 ? "Character_spritesheet pixelart face-right" : "Character_spritesheet pixelart face-left";
-      } else {
-        sprite.className = dy > 0 ? "Character_spritesheet pixelart face-down" : "Character_spritesheet pixelart face-up";
-      }
+  // Keep blocker on the line
+  blocker.style.top = blockerY + "px";
 
-      const distanceX = Math.abs(playerX - blockerX);
-      const distanceY = Math.abs(playerY - blockerY);
-      const collisionThreshold = 30;
+  // Face direction
+  const sprite = blocker.querySelector(".Character_spritesheet");
+  sprite.className = dx > 0
+    ? "Character_spritesheet pixelart face-right"
+    : "Character_spritesheet pixelart face-left";
 
-      if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
-        gameEnded = true;
-        const gameOver = document.createElement("div");
-        gameOver.className = "overlay-card";
-        gameOver.innerHTML = `
-          <h2>😵 GAME OVER!</h2>
-          <p>You were tagged!</p>
-          <button onclick="location.reload()"> Restart</button>
-        `;
-        document.body.appendChild(gameOver);
-      }
-    }, 200);
+  // Collision detection
+  const distanceX = Math.abs(playerX - blockerX);
+  const distanceY = Math.abs(y - blockerY);
+  const collisionThreshold = 30;
+
+  if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+    gameEnded = true;
+    const gameOver = document.createElement("div");
+    gameOver.className = "overlay-card";
+    gameOver.innerHTML = `
+      <h2>😵 GAME OVER!</h2>
+      <p>You were tagged!</p>
+      <button onclick="location.reload()">🔁 Restart</button>
+    `;
+    document.body.appendChild(gameOver);
+  }
+
+  // ✅ Finish line check
+  if (y < 50 && !gameEnded) {
+    gameEnded = true;
+    const winScreen = document.createElement("div");
+    winScreen.className = "overlay-card";
+    winScreen.innerHTML = `
+      <h2>🎉 YOU WIN!</h2>
+      <p>You crossed the line!</p>
+      <button onclick="location.reload()">🔁 Play Again</button>
+    `;
+    document.body.appendChild(winScreen);
+  }
+}, 200);
   });
 });
 </script>
