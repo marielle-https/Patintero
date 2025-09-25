@@ -184,15 +184,31 @@ document.body.addEventListener("touchstart", e => {
 });
 
   // === SIMPLE BLOCKER MOVEMENT (sideways only, always face front) ===
-  let blockerX = screenW * 0.4;
-  let direction = 1;
   setInterval(() => {
-    blockerX += 5 * direction;
-    if (blockerX > screenW * 0.8) direction = -1;
-    if (blockerX < screenW * 0.2) direction = 1; 
-    blocker.style.left = blockerX + "px";
-  }, 300);
-);
+   const playerX = x;
+   const playerY = y;
+   const blockerX = parseInt(blocker.style.left);
+   const blockerY = parseInt(blocker.style.top);
+
+   const dx = playerX - blockerX;
+   const dy = playerY - blockerY;
+
+   const step = 5;
+
+   if (Math.abs(dx) > step) {
+     blocker.style.left = blockerX + step * Math.sign(dx) + "px";
+   }
+   if (Math.abs(dy) > step) {
+     blocker.style.top = blockerY + step * Math.sign(dy) + "px";
+   }
+
+   const sprite = blocker.querySelector(".Character_spritesheet");
+   if (Math.abs(dx) > Math.abs(dy)) {
+     sprite.className = dx > 0 ? "Character_spritesheet pixelart face-right" : "Character_spritesheet pixelart face-left";
+   } else {
+       sprite.className = dy > 0 ? "Character_spritesheet pixelart face-down" : "Character_spritesheet pixelart face-up";
+     }
+  }, 2000);
 
 
 
