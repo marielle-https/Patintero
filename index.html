@@ -239,6 +239,14 @@ function showLeaderboard() {
   document.body.appendChild(lbOverlay);
   document.getElementById("closeLb").addEventListener("click", () => {
     lbOverlay.remove();
+    const gameOverEl = document.getElementById("gameOverOverlay");
+    if (gameOverEl) {
+      gameOverEl.style.display = "flex";
+    }
+    const winEl = document.getElementById("winOverlay");
+    if (winEl) {
+      winEl.style.display = "flex";
+    }
   });
 }
 
@@ -468,6 +476,7 @@ function initGame() {
       updatePlayerScore(playerName, currentLevel - 1);
       const gameOver = document.createElement("div");
       gameOver.className = "overlay-card";
+      gameOver.id = "gameOverOverlay";
       gameOver.innerHTML = `
         <h2>😵 GAME OVER!</h2>
         <p>You were tagged at Level ${currentLevel}! (Completed: ${Math.max(0, currentLevel - 1)} levels)</p>
@@ -476,7 +485,10 @@ function initGame() {
       `;
       document.body.appendChild(gameOver);
       document.getElementById("viewLbAfter")?.addEventListener("click", () => {
-        gameOver.remove();
+        const gameOverEl = document.getElementById("gameOverOverlay");
+        if (gameOverEl) {
+          gameOverEl.style.display = "none";
+        }
         showLeaderboard();
       });
       return;
@@ -504,15 +516,18 @@ function initGame() {
         updatePlayerScore(playerName, maxLevel);
         const winScreen = document.createElement("div");
         winScreen.className = "overlay-card";
+        winScreen.id = "winOverlay";
         winScreen.innerHTML = `
           <h2>🎉 YOU WIN!</h2>
           <p>You completed all ${maxLevel} levels!</p>
           <button class="submit-btn" onclick="location.reload()">🔁 Play Again</button>
-          <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button>
-        `;
+          <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button        `;
         document.body.appendChild(winScreen);
         document.getElementById("viewLbWin")?.addEventListener("click", () => {
-          winScreen.remove();
+          const winEl = document.getElementById("winOverlay");
+          if (winEl) {
+            winEl.style.display = "none";
+          }
           showLeaderboard();
         });
       }
@@ -527,7 +542,7 @@ function createBlockersForLevel(level) {
 
   for (let i = 0; i < level; i++) {
     const blocker = document.createElement("div");
-        blocker.className = "Character";
+    blocker.className = "Character";
     blocker.style.left = screenW * 0.5 + "px";
     blocker.style.top = linesY[i] + "px";
     blocker.setAttribute("facing", "down");
