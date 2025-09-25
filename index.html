@@ -23,30 +23,30 @@
       backdrop-filter: blur(5px);
       display: flex; flex-direction: column;
       justify-content: center; align-items: center;
-      text-align: center; padding: 5px;
+      text-align: center; padding: 5vw;
       z-index: 100;
     }
 
     .overlay-card h2 {
       margin-top: 0;
       color: yellow;
-      font-size: 28px;
+      font-size: 5vw;
       letter-spacing: 2px;
       text-shadow: 2px 2px 0 #000;
     }
 
     .overlay-card p {
-      font-size: 14px;
-      margin: 20px 0 30px;
+      font-size: 3vw;
+      margin: 5vw 0;
       line-height: 1.6em;
       color: #fff;
       text-shadow: 1px 1px 0 #000;
-      max-width: 600px;
+      max-width: 90vw;
     }
 
     #startBtn {
-      padding: 14px 30px;
-      font-size: 14px;
+      padding: 3vw 6vw;
+      font-size: 3vw;
       background: #2196f3;
       color: #fff;
       border: none;
@@ -119,11 +119,14 @@ document.getElementById("startBtn").addEventListener("click", () => {
   document.body.style.background = "url('playground.png') no-repeat center center fixed";
   document.body.style.backgroundSize = "cover";
 
+const screenW = window.innerWidth;
+const screenH = window.innerHeight;
+
   // === PLAYER SPRITE ===
   const player = document.createElement("div");
   player.className = "Character";
-  player.style.left = "200px";
-  player.style.top = "500px";
+  player.style.left = screenW * 0.4 + "px";
+  player.style.top = screenH * 0.8 + "px";
   player.setAttribute("facing","down");
 
   player.innerHTML = `
@@ -137,8 +140,8 @@ document.getElementById("startBtn").addEventListener("click", () => {
   // === BLOCKER SPRITE ===
   const blocker = document.createElement("div");
   blocker.className = "Character";
-  blocker.style.left = "200px"; // middle of the screen
-  blocker.style.top = "350px";  // near top
+  blocker.style.left = screenW * 0.4 + "px"; // middle of the screen
+  blocker.style.top = screenH * 0.8 + "px";  // near top
   blocker.setAttribute("facing","down");
 
   blocker.innerHTML = `
@@ -150,28 +153,46 @@ document.getElementById("startBtn").addEventListener("click", () => {
   document.body.appendChild(blocker);
 
   // === PLAYER MOVEMENT ===
-  let x = 200, y = 500;
+  let x = screenW * 0.4, y = screenH * 0.8;
+
+function nmovePlayer(dx, dy, direction) {
+  x += dx;
+  y += dy;
+  const sprite = player.querySelector(".Character_spritesheet");
+  sprite.className = `Character_spritesheet pixel art ${direction}`;
+  player.style.left = x + "px";
+  player.style.top = y + "px";
+}
 
   window.addEventListener("keydown", e => {
-    const sprite = player.querySelector(".Character_spritesheet");
-    if (e.key === "ArrowUp") { y -= 20; sprite.className="Character_spritesheet pixelart face-up"; }
-    if (e.key === "ArrowDown") { y += 20; sprite.className="Character_spritesheet pixelart face-down"; }
-    if (e.key === "ArrowLeft") { x -= 20; sprite.className="Character_spritesheet pixelart face-left"; }
-    if (e.key === "ArrowRight") { x += 20; sprite.className="Character_spritesheet pixelart face-right"; }
-    player.style.left = x + "px";
-    player.style.top = y + "px";
+    if (e.key === "ArrowUp") movePlayer (0, -20, "face-up");
+    if (e.key === "ArrowDown") movePlayer (0, 20, "face-down");
+    if (e.key === "ArrowLeft") movePlayer (-20, 0, "face-left");
+    if (e.key === "ArrowRight") movePlayer (20, 0, "face-right");
   });
 
+document.body.addEventListener("touchstart", e => {
+  const touchX = e.touches[0].clientX;
+  const touchY = e.touches[0].clientY;
+  const centerX = screenW / 2;
+  const centerY = screenH / 2;
+
+  if (touchY < centerY) movePlayer(0, -20, "face-up");
+  else if (touchY > centerY) movePlayer(0, 20, "face-down");
+  else if (touchX < centerX) movePlayer (-20, 0, "face-left");
+  else movePlayer(20, 0, "face-right");
+});
+
   // === SIMPLE BLOCKER MOVEMENT (sideways only, always face front) ===
-  let blockerX = 200;
+  let blockerX = screenW * 0.4;
   let direction = 1;
   setInterval(() => {
     blockerX += 5 * direction;
-    if (blockerX > 400) { direction = -1; }
-    if (blockerX < 100) { direction = 1; }
+    if (blockerX > screenW * 0.8) direction = -1;
+    if (blockerX < screenW * 0.2) direction = 1; 
     blocker.style.left = blockerX + "px";
   }, 300);
-});
+);
 
 
 
