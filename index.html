@@ -1,63 +1,181 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Patintero Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    html,body { height:100%; margin:0; padding:0; }
+    body {
+      font-family: "Press Start 2P", cursive;
+      background: url("patintero-bg.png") no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    .overlay-card {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 5px;
+      z-index: 100;
+    }
+
+    .overlay-card h2 {
+      margin-top: 0;
+      color: yellow;
+      font-size: 28px;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .overlay-card p {
+      font-size: 14px;
+      margin: 20px 0 30px;
+      line-height: 1.6em;
+      color: #fff;
+      text-shadow: 1px 1px 0 #000;
+      max-width: 600px;
+    }
+
+    #startBtn {
+      padding: 14px 30px;
+      font-size: 14px;
+      background: #2196f3;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 4px 0 #0d47a1;
+    }
+
+    #startBtn:hover {
+      background: #1976d2;
+      transform: scale(1.06);
+    }
+
+    /* CHARACTER SPRITE SYSTEM */
+    :root {
+      --pixel-size: 2;
+    }
+
+    .Character {
+      width: calc(32px * var(--pixel-size));
+      height: calc(32px * var(--pixel-size));
+      overflow: hidden;
+      position: absolute;
+    }
+
+    .Character_spritesheet {
+      animation: moveSpritesheet 1s steps(4) infinite;
+      width: calc(128px * var(--pixel-size));
+      position: absolute;
+    }
+    .Character_shadow {
+      position: absolute;
+      width: calc(32px * var(--pixel-size));
+      height: calc(32px * var(--pixel-size));
+    }
+
+    .pixelart {
+      image-rendering: pixelated;
+    }
+
+    .face-down { top: 0; }
+    .face-right { top: calc(-32px * var(--pixel-size)); }
+    .face-up { top: calc(-64px * var(--pixel-size)); }
+    .face-left { top: calc(-96px * var(--pixel-size)); }
+
+    @keyframes moveSpritesheet {
+      from { transform: translate3d(0px,0,0) }
+      to { transform: translate3d(-100%,0,0) }
+    }
+  </style>
 </head>
 <body>
-  <h1>Patintero Game</h1>
-  <div id="levelDisplay">Level 1</div>
-
-  <div id="gameArea">
-    <div id="player"> <!--addan panig img-->
-    </div>
+  <!-- Home Screen -->
+  <div class="overlay-card" id="homeScreen">
+    <h2>Patintero</h2>
+    <p>
+      🏃 Relive the excitement of a Filipino
+      childhood favorite! Cross the lines and avoid the taggers.<br><br>
+      👉 Use <b>ARROW KEYS</b> or <b>TAP</b> to move.<br>
+      🏁 Reach the opposite side without being tagged!
+    </p>
+    <button id="startBtn">▶ START GAME</button>
   </div>
-  <p id="message"></p>
-  <button id="startBtn">Start Game</button>
+<script>
+document.getElementById("startBtn").addEventListener("click", () => {
+  document.getElementById("homeScreen").remove();
 
-  <script> /* usbonon pani */
-    const player = document.getElementById('player');
-    const gameArea = document.getElementById('gameArea');
-    const startBtn = document.getElementById('startBtn');
-    const message = document.getElementById('message');
-    const levelDisplay = document.getElementById('levelDisplay');
+  // Change background image for gameplay
+  document.body.style.background = "url('playground.png') no-repeat center center fixed";
+  document.body.style.backgroundSize = "cover";
 
-    let playerPos = { x = 135, y = 470 };
-    let blockers = [];
-    let gameInterval;
-    let level = 1;
-    let speed = 2;
+  // === PLAYER SPRITE ===
+  const player = document.createElement("div");
+  player.className = "Character";
+  player.style.left = "200px";
+  player.style.top = "500px";
+  player.setAttribute("facing","down");
 
-    const gameWidth = 300;
-    const gameHeight = 500;
+  player.innerHTML = `
+    <img class="Character_shadow pixelart" 
+         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+    <img class="Character_spritesheet pixelart face-down" 
+         src="AjFP5.png" />
+  `;
+  document.body.appendChild(player);
 
-    /* arrow keys */
-    document.addEventListener('keydown', e => {
-  switch(e.key) {
-    case 'ArrowUp':
-      if(playerPos.y > 0) playerPos.y -= 10;
-      break;
-    case 'ArrowDown':
-      if(playerPos.y < gameHeight - 30) playerPos.y += 10;
-      break;
-    case 'ArrowLeft':
-      if(playerPos.x > 0) playerPos.x -= 10;
-      break;
-    case 'ArrowRight':
-      if(playerPos.x < gameWidth - 30) playerPos.x += 10;
-      break;
-  }
-      
-   player.style.top = playerPos.y + 'px';
-   player.style.left = playerPos.x + 'px';
-   checkWin();
+  // === BLOCKER SPRITE ===
+  const blocker = document.createElement("div");
+  blocker.className = "Character";
+  blocker.style.left = "200px"; // middle of the screen
+  blocker.style.top = "350px";  // near top
+  blocker.setAttribute("facing","down");
+
+  blocker.innerHTML = `
+    <img class="Character_shadow pixelart" 
+         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+    <img class="Character_spritesheet pixelart face-down" 
+         src="blocker.png" />
+  `;
+  document.body.appendChild(blocker);
+
+  // === PLAYER MOVEMENT ===
+  let x = 200, y = 500;
+
+  window.addEventListener("keydown", e => {
+    const sprite = player.querySelector(".Character_spritesheet");
+    if (e.key === "ArrowUp") { y -= 20; sprite.className="Character_spritesheet pixelart face-up"; }
+    if (e.key === "ArrowDown") { y += 20; sprite.className="Character_spritesheet pixelart face-down"; }
+    if (e.key === "ArrowLeft") { x -= 20; sprite.className="Character_spritesheet pixelart face-left"; }
+    if (e.key === "ArrowRight") { x += 20; sprite.className="Character_spritesheet pixelart face-right"; }
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+  });
+
+  // === SIMPLE BLOCKER MOVEMENT (sideways only, always face front) ===
+  let blockerX = 200;
+  let direction = 1;
+  setInterval(() => {
+    blockerX += 5 * direction;
+    if (blockerX > 400) { direction = -1; }
+    if (blockerX < 100) { direction = 1; }
+    blocker.style.left = blockerX + "px";
+  }, 300);
 });
 
-    // matog nako bye im sick :') 
- 
-  
-  </script>
+
+
+
+</script>
 </body>
 </html>
