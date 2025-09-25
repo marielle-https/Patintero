@@ -159,7 +159,7 @@ function movePlayer(dx, dy, direction) {
   x += dx;
   y += dy;
   const sprite = player.querySelector(".Character_spritesheet");
-  sprite.className = `Character_spritesheet pixel art ${direction}`;
+  sprite.className = `Character_spritesheet pixelart ${direction}`;
   player.style.left = x + "px";
   player.style.top = y + "px";
 }
@@ -184,7 +184,12 @@ document.body.addEventListener("touchstart", e => {
 });
 
   // === SIMPLE BLOCKER MOVEMENT (sideways only, always face front) ===
+
+   let gameEnded = false;
+
   setInterval(() => {
+   if (gameEnded) return;
+
    const playerX = x;
    const playerY = y;
    const blockerX = parseInt(blocker.style.left);
