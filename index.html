@@ -60,6 +60,8 @@
       cursor: pointer;
       transition: all 0.18s ease;
       box-shadow: 0 4px 0 #0d47a1;
+      z-index: 101;
+      pointer-events: auto;
     }
 
     #startBtn:hover {
@@ -118,124 +120,118 @@
     <button id="startBtn">▶ START GAME</button>
   </div>
 <script>
-document.getElementById("startBtn").addEventListener("click", () => {
-  document.getElementById("homeScreen").remove();
+document.addEventListener("DOMContentLoaded", () => {
+  const startBtn = document.getElementById("startBtn");
+  startBtn.addEventListener("click", () => {
+    document.getElementById("homeScreen").remove();
 
-  // Change background image for gameplay
-  document.body.style.background = "url('playground.png') no-repeat center center fixed";
-  document.body.style.backgroundSize = "cover";
+    document.body.style.background = "url('playground.png') no-repeat center center fixed";
+    document.body.style.backgroundSize = "cover";
 
-const screenW = window.innerWidth;
-const screenH = window.innerHeight;
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
 
-  // === PLAYER SPRITE ===
-  const player = document.createElement("div");
-  player.className = "Character";
-  player.style.left = screenW * 0.4 + "px";
-  player.style.top = screenH * 0.8 + "px";
-  player.setAttribute("facing","down");
+    // === PLAYER SPRITE ===
+    const player = document.createElement("div");
+    player.className = "Character";
+    player.style.left = screenW * 0.4 + "px";
+    player.style.top = screenH * 0.8 + "px";
+    player.setAttribute("facing", "down");
+    player.innerHTML = `
+      <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+      <img class="Character_spritesheet pixelart face-down" src="AjFP5.png" />
+    `;
+    document.body.appendChild(player);
 
-  player.innerHTML = `
-    <img class="Character_shadow pixelart" 
-         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
-    <img class="Character_spritesheet pixelart face-down" 
-         src="AjFP5.png" />
-  `;
-  document.body.appendChild(player);
+    // === BLOCKER SPRITE ===
+    const blocker = document.createElement("div");
+    blocker.className = "Character";
+    blocker.style.left = screenW * 0.4 + "px";
+    blocker.style.top = screenH * 0.2 + "px";
+    blocker.setAttribute("facing", "down");
+    blocker.innerHTML = `
+      <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+      <img class="Character_spritesheet pixelart face-down" src="blocker.png" />
+    `;
+    document.body.appendChild(blocker);
 
-  // === BLOCKER SPRITE ===
-  const blocker = document.createElement("div");
-  blocker.className = "Character";
-  blocker.style.left = screenW * 0.4 + "px"; // middle of the screen
-  blocker.style.top = screenH * 0.8 + "px";  // near top
-  blocker.setAttribute("facing","down");
+    // === PLAYER MOVEMENT ===
+    let x = screenW * 0.4, y = screenH * 0.8;
+    let gameEnded = false;
 
-  blocker.innerHTML = `
-    <img class="Character_shadow pixelart" 
-         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
-    <img class="Character_spritesheet pixelart face-down" 
-         src="blocker.png" />
-  `;
-  document.body.appendChild(blocker);
+    function movePlayer(dx, dy, direction) {
+      x += dx;
+      y += dy;
+      const sprite = player.querySelector(".Character_spritesheet");
+      sprite.className = `Character_spritesheet pixelart ${direction}`;
+      player.style.left = x + "px";
+      player.style.top = y + "px";
+    }
 
-  // === PLAYER MOVEMENT ===
-  let x = screenW * 0.4, y = screenH * 0.8;
+    window.addEventListener("keydown", e => {
+      if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
+      if (e.key === "ArrowDown") movePlayer(0, 20, "face-down");
+      if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
+      if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
+    });
 
-function movePlayer(dx, dy, direction) {
-  x += dx;
-  y += dy;
-  const sprite = player.querySelector(".Character_spritesheet");
-  sprite.className = `Character_spritesheet pixelart ${direction}`;
-  player.style.left = x + "px";
-  player.style.top = y + "px";
-}
+    document.body.addEventListener("touchstart", e => {
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const centerX = screenW / 2;
+      const centerY = screenH / 2;
 
-  window.addEventListener("keydown", e => {
-    if (e.key === "ArrowUp") movePlayer (0, -20, "face-up");
-    if (e.key === "ArrowDown") movePlayer (0, 20, "face-down");
-    if (e.key === "ArrowLeft") movePlayer (-20, 0, "face-left");
-    if (e.key === "ArrowRight") movePlayer (20, 0, "face-right");
+      if (touchY < centerY) movePlayer(0, -20, "face-up");
+      else if (touchY > centerY) movePlayer(0, 20, "face-down");
+      else if (touchX < centerX) movePlayer(-20, 0, "face-left");
+      else movePlayer(20, 0, "face-right");
+    });
+
+    // === BLOCKER CHASE + GAME OVER ===
+    setInterval(() => {
+      if (gameEnded) return;
+
+      const playerX = x;
+      const playerY = y;
+      const blockerX = parseInt(blocker.style.left);
+      const blockerY = parseInt(blocker.style.top);
+
+      const dx = playerX - blockerX;
+      const dy = playerY - blockerY;
+      const step = 5;
+
+      if (Math.abs(dx) > step) {
+        blocker.style.left = blockerX + step * Math.sign(dx) + "px";
+      }
+      if (Math.abs(dy) > step) {
+        blocker.style.top = blockerY + step * Math.sign(dy) + "px";
+      }
+
+      const sprite = blocker.querySelector(".Character_spritesheet");
+      if (Math.abs(dx) > Math.abs(dy)) {
+        sprite.className = dx > 0 ? "Character_spritesheet pixelart face-right" : "Character_spritesheet pixelart face-left";
+      } else {
+        sprite.className = dy > 0 ? "Character_spritesheet pixelart face-down" : "Character_spritesheet pixelart face-up";
+      }
+
+      const distanceX = Math.abs(playerX - blockerX);
+      const distanceY = Math.abs(playerY - blockerY);
+      const collisionThreshold = 30;
+
+      if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+        gameEnded = true;
+        const gameOver = document.createElement("div");
+        gameOver.className = "overlay-card";
+        gameOver.innerHTML = `
+          <h2>😵 GAME OVER!</h2>
+          <p>You were tagged!</p>
+          <button onclick="location.reload()"> Restart</button>
+        `;
+        document.body.appendChild(gameOver);
+      }
+    }, 200);
   });
-
-document.body.addEventListener("touchstart", e => {
-  const touchX = e.touches[0].clientX;
-  const touchY = e.touches[0].clientY;
-  const centerX = screenW / 2;
-  const centerY = screenH / 2;
-
-  if (touchY < centerY) movePlayer(0, -20, "face-up");
-  else if (touchY > centerY) movePlayer(0, 20, "face-down");
-  else if (touchX < centerX) movePlayer (-20, 0, "face-left");
-  else movePlayer(20, 0, "face-right");
 });
-
-  // === SIMPLE BLOCKER MOVEMENT (sideways only, always face front) ===
-
-   let gameEnded = false;
-
-  setInterval(() => {
-   if (gameEnded) return;
-
-   const playerX = x;
-   const playerY = y;
-   const blockerX = parseInt(blocker.style.left);
-   const blockerY = parseInt(blocker.style.top);
-
-   const dx = playerX - blockerX;
-   const dy = playerY - blockerY;
-
-   const step = 5;
-
-   if (Math.abs(dx) > step) {
-     blocker.style.left = blockerX + step * Math.sign(dx) + "px";
-   }
-   if (Math.abs(dy) > step) {
-     blocker.style.top = blockerY + step * Math.sign(dy) + "px";
-   }
-
-   const sprite = blocker.querySelector(".Character_spritesheet");
-   if (Math.abs(dx) > Math.abs(dy)) {
-     sprite.className = dx > 0 ? "Character_spritesheet pixelart face-right" : "Character_spritesheet pixelart face-left";
-   } else {
-       sprite.className = dy > 0 ? "Character_spritesheet pixelart face-down" : "Character_spritesheet pixelart face-up";
-     }
-
-
-  const distanceX = Math.abs(playerX - blockerX);
-  const distanceY = Math.abs(playerY - blockerY);
-  const collisionThreshold = 30;
-
-  if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
-    const gameOver = document.createElement("div");
-    gameOver.className = "overlay-card";
-    gameOver.innerHTML = ` <h2>😵 GAME OVER!</h2> <p>You were tagged!</p> <button onclick="location.reload()">Restart</button>`;
-   document.body.appendChild(gameOver);
-  }
- }, 200);
-
-
-
-
 </script>
 </body>
 </html>
