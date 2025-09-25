@@ -7,134 +7,153 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-     * {
-  -webkit-tap-highlight-color: transparent;
-     }
-
-    html,body { 
-      height: 100%; 
-      margin: 0; 
-      padding: 0; 
-    }
-
-    body {
+     html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      touch-action: manipulation;
       font-family: "Press Start 2P", cursive;
       background: url("patintero-bg.png") no-repeat center center fixed;
       background-size: cover;
       overflow: hidden;
-      touch-action: manipulation;
     }
 
-    .overlay-card {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90vw;
-      max-width: 600px;
-      background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(5px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 5vw;
-      z-index: 100;
+   * {
+    -webkit-tap-highlight-color: transparent;
    }
 
-    .overlay-card h2 {
-      margin-top: 0;
-      color: yellow;
-      font-size: 5vw;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0 #000;
-    }
+  .title-banner {
+     position: absolute;
+     top: 10px;
+     width: 100%;
+     text-align: center;
+     font-size: 4vw;
+     color: yellow;
+     text-shadow: 2px 2px 0 #000;
+     z-index: 99;
+  }
 
-    .overlay-card p {
-      font-size: 3vw;
-      margin: 5vw 0;
-      line-height: 1.6em;
-      color: #fff;
-      text-shadow: 1px 1px 0 #000;
-      max-width: 90vw;
-    }
+.overlay-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 600px;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5vw;
+  z-index: 100;
+}
 
-    #startBtn {
-      padding: 3vw 6vw;
-      font-size: 3vw;
-      background: #2196f3;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      box-shadow: 0 4px 0 #0d47a1;
-      z-index: 101;
-      pointer-events: auto;
-    }
+.overlay-card h2 {
+  margin-top: 0;
+  color: yellow;
+  font-size: 5vw;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 #000;
+}
 
-    #startBtn:hover {
-      background: #1976d2;
-      transform: scale(1.06);
-    }
+.overlay-card p {
+  font-size: 3vw;
+  margin: 5vw 0;
+  line-height: 1.6em;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  max-width: 90vw;
+}
 
-    /* CHARACTER SPRITE SYSTEM */
-    :root {
-      --pixel-size: 2;
-    }
+#username {
+  font-size: 2vw;
+  padding: 1vw;
+  margin-bottom: 2vw;
+  border-radius: 6px;
+  border: none;
+  width: 80%;
+  text-align: center;
+}
 
-    .Character {
-      width: calc(32px * var(--pixel-size));
-      height: calc(32px * var(--pixel-size));
-      overflow: hidden;
-      position: absolute;
-    }
+#startBtn {
+  padding: 3vw 6vw;
+  font-size: 3vw;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 0 #0d47a1;
+  z-index: 101;
+  pointer-events: auto;
+}
 
-    .Character_spritesheet {
-      animation: moveSpritesheet 1s steps(4) infinite;
-      width: calc(128px * var(--pixel-size));
-      position: absolute;
-    }
-    .Character_shadow {
-      position: absolute;
-      width: calc(32px * var(--pixel-size));
-      height: calc(32px * var(--pixel-size));
-    }
+#startBtn:hover {
+  background: #1976d2;
+  transform: scale(1.06);
+}
 
-    .pixelart {
-      image-rendering: pixelated;
-    }
+:root {
+  --pixel-size: 2;
+}
 
-    .face-down { top: 0; }
-    .face-right { top: calc(-32px * var(--pixel-size)); }
-    .face-up { top: calc(-64px * var(--pixel-size)); }
-    .face-left { top: calc(-96px * var(--pixel-size)); }
+.Character {
+  width: calc(32px * var(--pixel-size));
+  height: calc(32px * var(--pixel-size));
+  overflow: hidden;
+  position: absolute;
+}
 
-    @keyframes moveSpritesheet {
-      from { transform: translate3d(0px,0,0) }
-      to { transform: translate3d(-100%,0,0) }
-    }
+.Character_spritesheet {
+  animation: moveSpritesheet 1s steps(4) infinite;
+  width: calc(128px * var(--pixel-size));
+  position: absolute;
+}
+
+.Character_shadow {
+  position: absolute;
+  width: calc(32px * var(--pixel-size));
+  height: calc(32px * var(--pixel-size));
+}
+
+.pixelart {
+  image-rendering: pixelated;
+}
+
+.face-down { top: 0; }
+.face-right { top: calc(-32px * var(--pixel-size)); }
+.face-up { top: calc(-64px * var(--pixel-size)); }
+.face-left { top: calc(-96px * var(--pixel-size)); }
+
+@keyframes moveSpritesheet {
+  from { transform: translate3d(0px,0,0) }
+  to { transform: translate3d(-100%,0,0) }
+}
   </style>
 </head>
 <body>
   <!-- Home Screen -->
   <div class="overlay-card" id="homeScreen">
-    <h2>Patintero</h2>
-    <p>
-      🏃 Relive the excitement of a Filipino
-      childhood favorite! Cross the lines and avoid the taggers.<br><br>
-      👉 Use <b>ARROW KEYS</b> or <b>TAP</b> to move.<br>
-      🏁 Reach the opposite side without being tagged!
-    </p>
+    <h2>Welcome!</h2>
+    <p>Enter your username to begin:</p>
+    <input type="text" id="username" placeholder="Your name..." />
     <button id="startBtn">▶ START GAME</button>
   </div>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("startBtn");
   startBtn.addEventListener("click", () => {
-    document.getElementById("homeScreen").remove();
+    const username = document.getElementById("username").value.trim();
+    if (!username) {
+      alert("Please enter your username.");
+      return;
+    }
 
+    document.getElementById("homeScreen").remove();
     document.body.style.background = "url('playground.png') no-repeat center center fixed";
     document.body.style.backgroundSize = "cover";
 
@@ -157,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const blocker = document.createElement("div");
     blocker.className = "Character";
     blocker.style.left = screenW * 0.4 + "px";
-    blocker.style.top = screenH * 0.2 + "px";
     blocker.setAttribute("facing", "down");
     blocker.innerHTML = `
       <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
@@ -165,9 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(blocker);
 
-    // === PLAYER MOVEMENT ===
     let x = screenW * 0.4, y = screenH * 0.8;
     let gameEnded = false;
+    const blockerY = screenH * 0.5;
+    blocker.style.top = blockerY + "px";
 
     function movePlayer(dx, dy, direction) {
       x += dx;
@@ -176,81 +195,74 @@ document.addEventListener("DOMContentLoaded", () => {
       sprite.className = `Character_spritesheet pixelart ${direction}`;
       player.style.left = x + "px";
       player.style.top = y + "px";
+
+      // Finish line check
+      if (y < 50 && !gameEnded) {
+        gameEnded = true;
+        const winScreen = document.createElement("div");
+        winScreen.className = "overlay-card";
+        winScreen.innerHTML = `
+          <h2>🎉 YOU WIN!</h2>
+          <p>${username}, you crossed the line!</p>
+          <button onclick="location.reload()">🔁 Play Again</button>
+        `;
+        document.body.appendChild(winScreen);
+      }
     }
 
     window.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
-  if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
-  if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
-});
+      if (e.key === "ArrowLeft") movePlayer(-20, 0, "face-left");
+      if (e.key === "ArrowRight") movePlayer(20, 0, "face-right");
+      if (e.key === "ArrowUp") movePlayer(0, -20, "face-up");
+    });
 
     document.body.addEventListener("touchstart", e => {
-  const touchX = e.touches[0].clientX;
-  const touchY = e.touches[0].clientY;
-  const centerX = screenW / 2;
-  const centerY = screenH / 2;
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const centerX = screenW / 2;
+      const centerY = screenH / 2;
 
-  if (touchY < centerY) movePlayer(0, -20, "face-up");
-  else if (touchX < centerX) movePlayer(-20, 0, "face-left");
-  else movePlayer(20, 0, "face-right");
-});
+      if (touchY < centerY) movePlayer(0, -20, "face-up");
+      else if (touchX < centerX) movePlayer(-20, 0, "face-left");
+      else movePlayer(20, 0, "face-right");
+    });
 
-    // === BLOCKER CHASE + GAME OVER ===
-    let blockerY = screenH * 0.5; // blocker guards this line
-blocker.style.top = blockerY + "px";
+    // === BLOCKER CHASE ===
+    setInterval(() => {
+      if (gameEnded) return;
 
-setInterval(() => {
-  if (gameEnded) return;
+      const playerX = x;
+      const blockerX = parseInt(blocker.style.left);
+      const dx = playerX - blockerX;
+      const step = 5;
 
-  const playerX = x;
-  const blockerX = parseInt(blocker.style.left);
-  const dx = playerX - blockerX;
-  const step = 5;
+      if (Math.abs(dx) > step) {
+        blocker.style.left = blockerX + step * Math.sign(dx) + "px";
+      }
 
-  // Blocker moves left/right only
-  if (Math.abs(dx) > step) {
-    blocker.style.left = blockerX + step * Math.sign(dx) + "px";
-  }
+      blocker.style.top = blockerY + "px";
 
-  // Keep blocker on the line
-  blocker.style.top = blockerY + "px";
+      const sprite = blocker.querySelector(".Character_spritesheet");
+      sprite.className = dx > 0
+        ? "Character_spritesheet pixelart face-right"
+        : "Character_spritesheet pixelart face-left";
 
-  // Face direction
-  const sprite = blocker.querySelector(".Character_spritesheet");
-  sprite.className = dx > 0
-    ? "Character_spritesheet pixelart face-right"
-    : "Character_spritesheet pixelart face-left";
+      const distanceX = Math.abs(playerX - blockerX);
+      const distanceY = Math.abs(y - blockerY);
+      const collisionThreshold = 30;
 
-  // Collision detection
-  const distanceX = Math.abs(playerX - blockerX);
-  const distanceY = Math.abs(y - blockerY);
-  const collisionThreshold = 30;
-
-  if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
-    gameEnded = true;
-    const gameOver = document.createElement("div");
-    gameOver.className = "overlay-card";
-    gameOver.innerHTML = `
-      <h2>😵 GAME OVER!</h2>
-      <p>You were tagged!</p>
-      <button onclick="location.reload()">🔁 Restart</button>
-    `;
-    document.body.appendChild(gameOver);
-  }
-
-  // ✅ Finish line check
-  if (y < 50 && !gameEnded) {
-    gameEnded = true;
-    const winScreen = document.createElement("div");
-    winScreen.className = "overlay-card";
-    winScreen.innerHTML = `
-      <h2>🎉 YOU WIN!</h2>
-      <p>You crossed the line!</p>
-      <button onclick="location.reload()">🔁 Play Again</button>
-    `;
-    document.body.appendChild(winScreen);
-  }
-}, 200);
+      if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+        gameEnded = true;
+        const gameOver = document.createElement("div");
+        gameOver.className = "overlay-card";
+        gameOver.innerHTML = `
+          <h2>😵 GAME OVER!</h2>
+          <p>${username}, you were tagged!</p>
+          <button onclick="location.reload()">🔁 Restart</button>
+        `;
+        document.body.appendChild(gameOver);
+      }
+    }, 200);
   });
 });
 </script>
