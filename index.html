@@ -208,7 +208,17 @@ document.body.addEventListener("touchstart", e => {
    } else {
        sprite.className = dy > 0 ? "Character_spritesheet pixelart face-down" : "Character_spritesheet pixelart face-up";
      }
-  }, 2000);
+
+
+  const distanceX = Math.abs(playerX - blockerX);
+  const distanceY = Math.abs(playerY - blockerY);
+  const collisionThreshold = 30;
+
+  if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+    alert("😵 GAME OVER! You were tagged!");
+    location.reload();
+  }
+ }, 2000);
 
 
 
