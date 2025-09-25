@@ -155,7 +155,7 @@ const screenH = window.innerHeight;
   // === PLAYER MOVEMENT ===
   let x = screenW * 0.4, y = screenH * 0.8;
 
-function nmovePlayer(dx, dy, direction) {
+function movePlayer(dx, dy, direction) {
   x += dx;
   y += dy;
   const sprite = player.querySelector(".Character_spritesheet");
@@ -215,10 +215,12 @@ document.body.addEventListener("touchstart", e => {
   const collisionThreshold = 30;
 
   if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
-    alert("😵 GAME OVER! You were tagged!");
-    location.reload();
+    const gameOver = document.createElement("div");
+    gameOver.className = "overlay-card";
+    gameOver.innerHTML = ` <h2>😵 GAME OVER!</h2> <p>You were tagged!</p> <button onclick="location.reload()">Restart</button>`;
+   document.body.appendChild(gameOver);
   }
- }, 2000);
+ }, 200);
 
 
 
