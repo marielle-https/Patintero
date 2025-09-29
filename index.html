@@ -306,7 +306,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lb.sort((a, b) => b.levelsCompleted - a.levelsCompleted || a.name.localeCompare(b.name));
     saveLeaderboard(lb);
+  } 
+ function showLeaderboard() {
+    const lb = getLeaderboard();
+    const top10 = lb.slice(0, 10);
+    let html = '<h2>🏆 Leaderboard</h2><p>Top 10 Players by Levels Completed</p><ul>';
+    if (top10.length === 0) {
+      html += '<li>No scores yet!</li>';
+    } else {
+      top10.forEach((p, i) => {
+        html += `<li>${i + 1}. ${p.name} - ${p.levelsCompleted} Levels</li>`;
+      });
+    }
+    html += '</ul><button class="submit-btn" id="closeLb">Close</button>';
+    const lbOverlay = document.createElement("div");
+    lbOverlay.className = "overlay-card";
+    lbOverlay.id = "lbOverlay";
+    lbOverlay.innerHTML = html;
+    document.body.appendChild(lbOverlay);
+    document.getElementById("closeLb").addEventListener("click", () => {
+      lbOverlay.remove();
+      const gameOverEl = document.getElementById("gameOverOverlay");
+      if (gameOverEl) {
+        gameOverEl.style.display = "flex";
+      }
+      const winEl = document.getElementById("winOverlay");
+      if (winEl) {
+        winEl.style.display = "flex";
+      }
+    });
   }
+
 
 
 
