@@ -196,7 +196,7 @@ let screenW, screenH;
 let blockers = [];
 let linesY = [];
 
-// ApiLeaderboard functions
+// Leaderboard store in JSON for API
 function getLeaderboard() {
   return JSON.parse(localStorage.getItem('patinteroLeaderboard') || '[]');
 }
@@ -278,7 +278,7 @@ startBtn.addEventListener("click", () => {
     }
     playerName = name;
 
-    // Store in JSON for API (localStorage example; can be sent to API later)
+    // username store in JSON for API 
     const playerData = {
       name: playerName,
       currentLevel: currentLevel,
@@ -292,7 +292,7 @@ startBtn.addEventListener("click", () => {
     initGame();
   });
 
-  // Allow Enter key for username
+  //Enter key for username
   usernameInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       submitNameBtn.click();
@@ -423,7 +423,7 @@ function initGame() {
   // Add click event for mouse
   document.body.addEventListener("click", handleClickMove);
 
-  // Add mousedown for more responsive mouse input (optional, but adds immediacy)
+  // Add mousedown for more responsive mouse input
   document.body.addEventListener("mousedown", handleClickMove);
 
   // === BLOCKER CHASE + GAME OVER ===
@@ -461,7 +461,7 @@ function initGame() {
       const sprite = blk.querySelector(".Character_spritesheet");
       sprite.className = `Character_spritesheet pixelart ${faceDir}`;
 
-      // Collision detection (using new position)
+      // Collision detection
       const distanceX = Math.abs(playerX - newBlockerX);
       const distanceY = Math.abs(y - blockerY);
       const collisionThreshold = 40;
@@ -494,7 +494,7 @@ function initGame() {
       return;
     }
 
-    // ✅ Finish line check (pass last blocker)
+    // ✅ Finish line check
     if (y < 20 && !gameEnded) {
       gameEnded = true;
       if (currentLevel < maxLevel) {
