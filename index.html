@@ -428,6 +428,41 @@ document.addEventListener("DOMContentLoaded", () => {
     player.style.top = y + "px";
     player.setAttribute("facing", "down");
     player.innerHTML = `
+      <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+      <img class="Character_spritesheet pixelart face-down" src="AjFP5.png" />
+    `;
+    document.body.appendChild(player);
+// Create initial blockers & finish line
+    createBlockersForLevel(currentLevel);
+    createFinishLine(currentLevel);
+
+    // === JOYSTICK SETUP (for mobile/touch devices) ===
+    const joystick = document.createElement('div');
+    joystick.id = 'joystick';
+    const knob = document.createElement('div');
+    knob.id = 'knob';
+    joystick.appendChild(knob);
+    document.body.appendChild(joystick);
+
+    // Show joystick on touch devices
+    if ('ontouchstart' in window) {
+      joystick.style.display = 'block';
+    }
+
+    // Joystick event handlers
+    const joystickElement = document.getElementById('joystick');
+    const knobElement = document.getElementById('knob');
+
+    joystickElement.addEventListener('touchstart', (e) => {
+      if (gameEnded) return;
+      e.preventDefault();
+      joystickActive = true;
+      const rect = joystickElement.getBoundingClientRect();
+      joystickCenterX = rect.left + rect.width / 2;
+      joystickCenterY = rect.top + rect.height / 2;
+      updateKnob(e.touches[0].clientX, e.touches[0].clientY);
+      startJoystickMovement();
+    });
 
 
 
