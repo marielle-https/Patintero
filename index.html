@@ -463,6 +463,57 @@ document.addEventListener("DOMContentLoaded", () => {
       updateKnob(e.touches[0].clientX, e.touches[0].clientY);
       startJoystickMovement();
     });
+    joystickElement.addEventListener('touchmove', (e) => {
+      if (!joystickActive || gameEnded) return;
+      e.preventDefault();
+      updateKnob(e.touches[0].clientX, e.touches[0].clientY);
+    });
+
+    joystickElement.addEventListener('touchend', (e) => {
+      if (gameEnded) return;
+      e.preventDefault();
+      joystickActive = false;
+      currentDx = 0;
+      currentDy = 0;
+      knobElement.style.transform = 'translate(-50%, -50%)';
+      stopJoystickMovement();
+    });
+
+    function updateKnob(touchX, touchY) {
+      const deltaX = touchX - joystickCenterX;
+      const deltaY = touchY - joystickCenterY;
+      const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const maxDist = 30; // Max drag distance
+
+      let normalizedDx = 0;
+      let normalizedDy = 0;
+
+      if (dist > maxDist) {
+        const angle = Math.atan2(deltaY, deltaX);
+        const clampedX = Math.cos(angle) * maxDist;
+        const clampedY = Math.sin(angle) * maxDist;
+        normalizedDx = clampedX / maxDist;
+        normalizedDy = clampedY / maxDist;
+        knobElement.style.transform = `translate(-50%, -50%) translate(${clampedX}px, ${clampedY}px)`;
+      } else {
+        normalizedDx = deltaX / maxDist;
+        normalizedDy = deltaY / maxDist;
+        knobElement.style.transform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px)`;
+      }
+
+      currentDx = normalizedDx;
+      currentDy = normalizedDy;
+    }
+
+    function startJoystickMovement() {
+      if (joystickInterval) clearInterval(joystickInterval);
+      joystickInterval = setInterval(() => {
+        if (!joystickActive || gameEnded) {
+          stopJoystickMovement();
+          return;
+        }
+        moveBasedOnJoystick();
+      }, 150); // Move every 150ms
 
 
 
