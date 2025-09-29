@@ -385,6 +385,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+ function initGame() {
+    screenW = window.innerWidth;
+    screenH = window.innerHeight;
+
+    document.body.style.background = "url('playground.png') no-repeat center center fixed";
+    document.body.style.backgroundSize = "cover";
+
+    // UI Elements
+    const uiLeft = document.createElement("div");
+    uiLeft.id = "ui-left";
+    uiLeft.className = "top-ui";
+    uiLeft.innerHTML = '<div id="playerInfo"></div>';
+    document.body.appendChild(uiLeft);
+
+    const uiRight = document.createElement("div");
+    uiRight.id = "ui-right";
+    uiRight.className = "top-ui";
+    uiRight.innerHTML = '<h3>PATINTERO</h3>';
+    document.body.appendChild(uiRight);
+
+    updatePlayerInfo();
+
+    // Lines for blockers (from bottom to top)
+    linesY = [
+      screenH * 0.75,
+      screenH * 0.60,
+      screenH * 0.45,
+      screenH * 0.30,
+      screenH * 0.15
+    ];
+
+    // player size constant for crossing/collision math
+    const PLAYER_SIZE = 64;
+
+    // === PLAYER SPRITE ===
+    const player = document.createElement("div");
+    player.className = "Character";
+    x = screenW * 0.5;
+    y = screenH - 100; // start closer to bottom
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+    player.setAttribute("facing", "down");
+    player.innerHTML = `
+
 
 
 
