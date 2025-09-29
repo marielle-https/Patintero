@@ -514,6 +514,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         moveBasedOnJoystick();
       }, 150); // Move every 150ms
+    }
+
+    function stopJoystickMovement() {
+      if (joystickInterval) {
+        clearInterval(joystickInterval);
+        joystickInterval = null;
+      }
+    }
+    function moveBasedOnJoystick() {
+      if (!joystickActive || gameEnded) return;
+
+      const threshold = 0.3;
+      let dx = 0, dy = 0, direction = 'face-down';
+
+      if (Math.abs(currentDx) > threshold || Math.abs(currentDy) > threshold) {
+        if (Math.abs(currentDy) > Math.abs(currentDx)) {
+          if (currentDy < -threshold) {
+            dy = -15;
+            direction = 'face-up';
+          } else if (currentDy > threshold) {
+            dy = 15;
+            direction = 'face-down';
+          }
+        } else {
+          if (currentDx < -threshold) {
+            dx = -15;
+            direction = 'face-left';
+          } else if (currentDx > threshold) {
+            dx = 15;
+            direction = 'face-right';
+          }
+        }
+        movePlayer(dx, dy, direction);
+      }
+    }
+
 
 
 
