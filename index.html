@@ -219,6 +219,49 @@ body {
   from { transform: translate3d(0px,0,0) }
   to { transform: translate3d(-100%,0,0) }
 }
+  /* FINISH LINE STYLE */
+.finish-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
+  animation: pulseGlow 1.5s infinite alternate;
+  box-shadow: 0 0 15px rgba(255,255,0,0.8);
+  z-index: 900;
+}
+
+@keyframes pulseGlow {
+  from {
+    opacity: 0.5;
+    box-shadow: 0 0 5px rgba(255,255,0,0.5);
+  }
+  to {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(255,255,0,1);
+  }
+}
+</style>
+</head>
+<body>
+<!-- Home Screen -->
+<div class="overlay-card" id="homeScreen">
+  <h2>Patintero</h2>
+  <p>
+    🏃 Relive the excitement of a Filipino
+    childhood favorite! Cross the lines and avoid the taggers.<br><br>
+    👉 Use <b>ARROW KEYS / WASD</b> on desktop or <b>VIRTUAL JOYSTICK</b> on mobile to move.<br>
+    🏁 Reach the opposite side without being tagged!
+  </p>
+  <button id="startBtn">▶ START GAME</button>
+  <button id="leaderboardBtn">🏆 Leaderboard</button>
+</div>
+
+<!-- Level Complete Announcement Overlay -->
+<div id="levelCompleteOverlay">
+  <h2 id="completeMessage">Level Complete!</h2>
+</div>
+
 
 
 
