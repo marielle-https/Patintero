@@ -262,6 +262,52 @@ body {
   <h2 id="completeMessage">Level Complete!</h2>
 </div>
 
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const startBtn = document.getElementById("startBtn");
+  const leaderboardBtn = document.getElementById("leaderboardBtn");
+  let playerName = '';
+  let currentLevel = 1;
+  let maxLevel = 5;
+  let gameEnded = false;
+  let x, y;
+  let screenW, screenH;
+  let blockers = [];
+  let linesY = [];
+  let finishLine = null; // finish line element
+
+  // Joystick variables
+  let joystickActive = false;
+  let joystickCenterX = 0;
+  let joystickCenterY = 0;
+  let currentDx = 0;
+  let currentDy = 0;
+  let joystickInterval = null;
+
+  // ApiLeaderboard functions
+  function getLeaderboard() {
+    return JSON.parse(localStorage.getItem('patinteroLeaderboard') || '[]');
+  }
+
+  function saveLeaderboard(leaderboard) {
+    localStorage.setItem('patinteroLeaderboard', JSON.stringify(leaderboard));
+  }
+
+  function updatePlayerScore(name, levelsCompleted) {
+    let lb = getLeaderboard();
+    const completed = Math.max(0, levelsCompleted);
+    let existing = lb.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      if (completed > existing.levelsCompleted) {
+        existing.levelsCompleted = completed;
+      }
+    } else {
+      lb.push({ name: name, levelsCompleted: completed });
+    }
+    lb.sort((a, b) => b.levelsCompleted - a.levelsCompleted || a.name.localeCompare(b.name));
+    saveLeaderboard(lb);
+  }
+
 
 
 
