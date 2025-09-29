@@ -549,6 +549,53 @@ document.addEventListener("DOMContentLoaded", () => {
         movePlayer(dx, dy, direction);
       }
     }
+     // === PLAYER MOVEMENT ===
+    gameEnded = false;
+
+    function movePlayer(dx, dy, direction) {
+      if (gameEnded) return;
+      x += dx;
+      y += dy;
+      // Bounds
+      const playerSize = PLAYER_SIZE;
+      x = Math.max(0, Math.min(screenW - playerSize, x));
+      y = Math.max(0, Math.min(screenH - playerSize, y));
+      const sprite = player.querySelector(".Character_spritesheet");
+      sprite.className = `Character_spritesheet pixelart ${direction}`;
+      player.style.left = x + "px";
+      player.style.top = y + "px";
+    }
+
+    // Keyboard controls (desktop)
+    window.addEventListener("keydown", e => {
+      if (gameEnded) return;
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") movePlayer(-15, 0, "face-left");
+      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") movePlayer(15, 0, "face-right");
+      if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") movePlayer(0, -15, "face-up");
+      if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") movePlayer(0, 15, "face-down");
+    });
+
+    // Level Complete Announcement Function
+    function showLevelComplete() {
+      const overlay = document.getElementById('levelCompleteOverlay');
+      const messageEl = document.getElementById('completeMessage');
+      messageEl.textContent = `Level ${currentLevel} Complete!`;
+      overlay.style.display = 'block';
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        currentLevel++;
+        x = screenW * 0.5;
+        y = screenH - 100;
+        player.style.left = x + "px";
+        player.style.top = y + "px";
+        createBlockersForLevel(currentLevel);
+        createFinishLine(currentLevel);
+        updatePlayerInfo();
+        gameEnded = false;
+      }, 1500); // Show for 1.5 seconds
+    }
+
 
 
 
