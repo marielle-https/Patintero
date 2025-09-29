@@ -730,6 +730,18 @@ document.addEventListener("DOMContentLoaded", () => {
     finishLine.style.top = Math.round(linesY[level - 1]) + "px";
     document.body.appendChild(finishLine);
   }
+   function updatePlayerInfo() {
+    const playerInfo = document.getElementById("playerInfo");
+    if (playerInfo) {
+      playerInfo.innerHTML = `${playerName}<br>Level ${currentLevel}/${maxLevel}`;
+    }
+  }
+});
+</script>
+</body>
+</html>
+
+
 
 
 
