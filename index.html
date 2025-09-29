@@ -595,6 +595,61 @@ document.addEventListener("DOMContentLoaded", () => {
         gameEnded = false;
       }, 1500); // Show for 1.5 seconds
     }
+      // === BLOCKER CHASE + GAME OVER ===
+    setInterval(() => {
+      if (gameEnded) return;
+
+      // --- FIRST: check finish crossing (priority over collisions) ---
+      const targetLineY = linesY[currentLevel - 1];
+      const PLAYER_SIZE_CONST = PLAYER_SIZE;
+      const playerCenterY = y + PLAYER_SIZE_CONST / 2;
+
+      if (typeof targetLineY !== 'undefined' && playerCenterY <= targetLineY && !gameEnded) {
+        // Player has crossed the finish line — finish BEFORE blockers can tag
+        gameEnded = true;
+        if (currentLevel < maxLevel) {
+          showLevelComplete();
+        } else {
+          updatePlayerScore(playerName, maxLevel);
+          const winScreen = document.createElement("div");
+          winScreen.className = "overlay-card";
+          winScreen.id = "winOverlay";
+          winScreen.innerHTML = `
+            <h2>🎉 YOU WIN!</h2>
+            <p>You completed all ${maxLevel} levels!</p>
+            <button class="submit-btn" onclick="location.reload()">🔁 Play Again</button>
+            <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button>
+          `;
+          document.body.appendChild(winScreen);
+          document.getElementById("viewLbWin")?.addEventListener("click", () => {
+            const winEl = document.getElementById("winOverlay");
+            if (winEl) {
+              winEl.style.display = "none";
+            }
+            showLeaderboard();
+          });
+        }
+        return; // don't run blockers logic this tick
+      }
+
+      // --- THEN: blockers move and collision checks ---
+      const playerX = x;
+      let tagged = false;
+
+      blockers.forEach(blk => {
+        const blockerX = parseInt(blk.style.left, 10);
+        const blockerY = parseInt(blk.style.top, 10);
+        const dx = playerX - blockerX;
+        const dy = y - blockerY;
+        const step = 16; // blocker speed (slightly slower)
+
+        let newBlockerX = blockerX;
+
+// Blocker moves left/right only
+        if (Math.abs(dx) > step) {
+          newBlockerX = blockerX + step * Math.sign(dx);
+          blk.style.left = newBlockerX + "px";
+        }
 
 
 
