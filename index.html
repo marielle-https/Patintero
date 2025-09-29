@@ -651,6 +651,43 @@ document.addEventListener("DOMContentLoaded", () => {
           blk.style.left = newBlockerX + "px";
         }
 
+                 // Keep blocker on the line
+        blk.style.top = blockerY + "px";
+
+        // Face towards player
+        let faceDir;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          faceDir = dy > 0 ? "face-down" : "face-up";
+        } else {
+          faceDir = dx > 0 ? "face-right" : "face-left";
+        }
+        const sprite = blk.querySelector(".Character_spritesheet");
+        if (sprite) sprite.className = `Character_spritesheet pixelart ${faceDir}`;
+
+        // Collision detection (using new position)
+        const distanceX = Math.abs(playerX - newBlockerX);
+        const distanceY = Math.abs(y - blockerY);
+        const collisionThreshold = 36; // slightly reduced threshold
+
+        if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
+          tagged = true;
+        }
+      });
+
+      if (tagged) {
+        gameEnded = true;
+        updatePlayerScore(playerName, currentLevel - 1);
+        const gameOver = document.createElement("div");
+        gameOver.className = "overlay-card";
+        gameOver.id = "gameOverOverlay";
+        gameOver.innerHTML = `
+          <h2>😵 GAME OVER!</h2>
+          <p>You were tagged at Level ${currentLevel}! (Completed: ${Math.max(0, currentLevel - 1)} levels)</p>
+          <button class="submit-btn" onclick="location.reload()">🔁 Restart</button>
+          <button id="viewLbAfter" class="submit-btn">🏆 View Leaderboard</button>
+        `;
+
+
 
 
 
