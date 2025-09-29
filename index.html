@@ -336,6 +336,54 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  leaderboardBtn.addEventListener("click", showLeaderboard);
+
+  startBtn.addEventListener("click", () => {
+    document.getElementById("homeScreen").style.display = "none";
+
+    // Username Input Overlay
+    const nameOverlay = document.createElement("div");
+    nameOverlay.className = "overlay-card";
+    nameOverlay.id = "nameOverlay";
+    nameOverlay.innerHTML = `
+      <h2>Enter Player Name</h2>
+      <p>To start the game, please enter your username.</p>
+      <input id="username" type="text" placeholder="Your Name" maxlength="20">
+      <button class="submit-btn" id="submitName">▶ START GAME</button>
+    `;
+    document.body.appendChild(nameOverlay);
+
+    const submitNameBtn = document.getElementById("submitName");
+    const usernameInput = document.getElementById("username");
+
+    submitNameBtn.addEventListener("click", () => {
+      const name = usernameInput.value.trim();
+      if (!name) {
+        alert("Please enter a username to start the game!");
+        return;
+      }
+      playerName = name;
+
+      const playerData = {
+        name: playerName,
+        currentLevel: currentLevel,
+        maxLevel: maxLevel
+      };
+      localStorage.setItem('patinteroPlayer', JSON.stringify(playerData));
+
+      nameOverlay.remove();
+
+      // Initialize Game
+      initGame();
+    });
+
+    // Allow Enter key for username
+    usernameInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        submitNameBtn.click();
+      }
+    });
+  });
 
 
 
