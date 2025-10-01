@@ -8,11 +8,10 @@
 
 <style>
 html,body { 
-height: 100%; 
-margin:0; 
-padding:0; 
+  height: 100%; 
+  margin:0; 
+  padding:0; 
 }
-
 body {
   font-family: "Press Start 2P", cursive;
   background: url("patintero-bg.png") no-repeat center center fixed;
@@ -20,6 +19,7 @@ body {
   overflow: hidden;
 }
 
+/* overlay card, UI, joystick, sprites etc (kept mostly as you had) */
 .overlay-card {
   position: fixed;
   top: 50%;
@@ -55,32 +55,9 @@ body {
   max-width: 90vw;
 }
 
-.overlay-card ul {
-  text-align: left;
-  color: #fff;
-  font-size: 2.5vw;
-  max-width: 80%;
-  margin: 2vw 0;
-  list-style: none;
-  padding: 0;
-}
-
-.overlay-card li {
-  margin: 1vw 0;
-  text-shadow: 1px 1px 0 #000;
-}
-
-.overlay-card input {
-  padding: 3vw;
-  font-size: 3vw;
-  width: 70%;
-  margin: 2vw 0;
-  border: 2px solid #fff;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.9);
-  font-family: inherit;
-  text-align: center;
-}
+.overlay-card ul { text-align: left; color: #fff; font-size: 2.5vw; max-width: 80%; margin: 2vw 0; list-style: none; padding: 0; }
+.overlay-card li { margin: 1vw 0; text-shadow: 1px 1px 0 #000; }
+.overlay-card input { padding: 3vw; font-size: 3vw; width: 70%; margin: 2vw 0; border: 2px solid #fff; border-radius: 8px; background: rgba(255,255,255,0.9); font-family: inherit; text-align: center; }
 
 #startBtn, .submit-btn, #leaderboardBtn {
   padding: 3vw 6vw;
@@ -96,75 +73,19 @@ body {
   pointer-events: auto;
   margin: 2vw 0;
 }
-
-#leaderboardBtn {
-  background: #4caf50;
-  box-shadow: 0 4px 0 #388e3c;
-}
-
-#startBtn:hover, .submit-btn:hover, #leaderboardBtn:hover {
-  transform: scale(1.06);
-}
-
-#leaderboardBtn:hover {
-  background: #45a049;
-}
+#leaderboardBtn { background: #4caf50; box-shadow: 0 4px 0 #388e3c; }
+#startBtn:hover, .submit-btn:hover, #leaderboardBtn:hover { transform: scale(1.06); }
+#leaderboardBtn:hover { background: #45a049; }
 
 /* UI Elements */
-.top-ui {
-  position: fixed;
-  top: 10px;
-  z-index: 1000;
-  color: white;
-  text-shadow: 1px 1px 0 black;
-  font-size: clamp(8px, 2vw, 16px);
-  line-height: 1.2;
-}
-
-#ui-left {
-  left: 10px;
-}
-
-#ui-right {
-  right: 10px;
-  text-align: right;
-}
-
-#ui-right h3 {
-  color: yellow;
-  font-size: clamp(12px, 4vw, 24px);
-  margin: 0;
-  letter-spacing: 2px;
-}
+.top-ui { position: fixed; top: 10px; z-index: 1000; color: white; text-shadow: 1px 1px 0 black; font-size: clamp(8px, 2vw, 16px); line-height: 1.2; }
+#ui-left { left: 10px; }
+#ui-right { right: 10px; text-align: right; }
+#ui-right h3 { color: yellow; font-size: clamp(12px, 4vw, 24px); margin: 0; letter-spacing: 2px; }
 
 /* Joystick Styles */
-#joystick {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 100px;
-  height: 100px;
-  background: rgba(255, 255, 255, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  z-index: 999;
-  pointer-events: auto;
-  display: none;
-  transition: opacity 0.3s ease;
-}
-
-#knob {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease;
-}
+#joystick { position: fixed; bottom: 20px; left: 20px; width: 100px; height: 100px; background: rgba(255, 255, 255, 0.18); border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 50%; z-index: 999; pointer-events: auto; display: none; transition: opacity 0.3s ease; }
+#knob { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(255, 255, 255, 0.9); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.08s ease; }
 
 /* Level Complete Announcement */
 #levelCompleteOverlay {
@@ -174,7 +95,7 @@ body {
   transform: translate(-50%, -50%);
   width: 80vw;
   max-width: 400px;
-  background: rgba(0, 255, 0, 0.8);
+  background: rgba(0, 255, 0, 0.88);
   color: white;
   padding: 20px;
   border-radius: 10px;
@@ -187,63 +108,29 @@ body {
 }
 
 /* CHARACTER SPRITE SYSTEM */
-:root {
-  --pixel-size: 2;
-}
+:root { --pixel-size: 2; }
+.Character { width: calc(32px * var(--pixel-size)); height: calc(32px * var(--pixel-size)); overflow: hidden; position: absolute; transform: translate(-50%, -50%); pointer-events: none; }
+.Character img { display: block; background: transparent; }
+.Character_spritesheet { animation: moveSpritesheet 1s steps(4) infinite; width: calc(128px * var(--pixel-size)); position: absolute; left: 0; top: 0; }
+.Character_shadow { position: absolute; width: calc(32px * var(--pixel-size)); height: calc(32px * var(--pixel-size)); left: 0; top: 0; opacity: 0.9; }
 
-.Character {
-  width: calc(32px * var(--pixel-size));
-  height: calc(32px * var(--pixel-size));
-  overflow: hidden;
-  position: absolute;
-}
-
-.Character_spritesheet {
-  animation: moveSpritesheet 1s steps(4) infinite;
-  width: calc(128px * var(--pixel-size));
-  position: absolute;
-}
-.Character_shadow {
-  position: absolute;
-  width: calc(32px * var(--pixel-size));
-  height: calc(32px * var(--pixel-size));
-}
-
-.pixelart {
-  image-rendering: pixelated;
-}
+.pixelart { image-rendering: pixelated; }
 
 .face-down { top: 0; }
 .face-right { top: calc(-32px * var(--pixel-size)); }
 .face-up { top: calc(-64px * var(--pixel-size)); }
 .face-left { top: calc(-96px * var(--pixel-size)); }
 
-@keyframes moveSpritesheet {
-  from { transform: translate3d(0px,0,0) }
-  to { transform: translate3d(-100%,0,0) }
-}
+@keyframes moveSpritesheet { from { transform: translate3d(0px,0,0) } to { transform: translate3d(-100%,0,0) } }
 
 /* FINISH LINE STYLE */
-.finish-line {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
-  animation: pulseGlow 1.5s infinite alternate;
-  box-shadow: 0 0 15px rgba(255,255,0,0.8);
-  z-index: 900;
-}
+.finish-line { position: absolute; left: 0; width: 100%; height: 6px; background: linear-gradient(to right, #ff0000, #ffff00, #00ff00); animation: pulseGlow 1.5s infinite alternate; box-shadow: 0 0 15px rgba(255,255,0,0.8); z-index: 900; transform: translateY(-50%); opacity: 0.6; }
+@keyframes pulseGlow { from { opacity: 0.5; box-shadow: 0 0 5px rgba(255,255,0,0.5); } to { opacity: 1; box-shadow: 0 0 20px rgba(255,255,0,1); } }
 
-@keyframes pulseGlow {
-  from {
-    opacity: 0.5;
-    box-shadow: 0 0 5px rgba(255,255,0,0.5);
-  }
-  to {
-    opacity: 1;
-    box-shadow: 0 0 20px rgba(255,255,0,1);
-  }
+/* small responsiveness */
+@media (max-width:600px) {
+  .overlay-card { padding: 6vw; }
+  .overlay-card h2 { font-size: 6vw; }
 }
 </style>
 </head>
@@ -261,7 +148,7 @@ body {
   <button id="leaderboardBtn">🏆 Leaderboard</button>
 </div>
 
-<!-- Level Complete Announcement Overlay -->
+<!-- Level Complete -->
 <div id="levelCompleteOverlay">
   <h2 id="completeMessage">Level Complete!</h2>
 </div>
@@ -270,17 +157,22 @@ body {
 document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("startBtn");
   const leaderboardBtn = document.getElementById("leaderboardBtn");
+
   let playerName = '';
   let currentLevel = 1;
-  let maxLevel = 5;
+  const maxLevel = 5;
   let gameEnded = false;
-  let x, y;
-  let screenW, screenH;
+
+  // screen dims (initialized in initGame)
+  let screenW = window.innerWidth;
+  let screenH = window.innerHeight;
+
+  // game elements state
   let blockers = [];
   let linesY = [];
-  let finishLine = null; // finish line element
+  let finishLine = null;
 
-  // Joystick variables
+  // joystick state
   let joystickActive = false;
   let joystickCenterX = 0;
   let joystickCenterY = 0;
@@ -288,23 +180,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentDy = 0;
   let joystickInterval = null;
 
-  // ApiLeaderboard functions
+  // Leaderboard helpers (localStorage)
   function getLeaderboard() {
     return JSON.parse(localStorage.getItem('patinteroLeaderboard') || '[]');
   }
-
   function saveLeaderboard(leaderboard) {
     localStorage.setItem('patinteroLeaderboard', JSON.stringify(leaderboard));
   }
-
   function updatePlayerScore(name, levelsCompleted) {
+    if (!name) return;
     let lb = getLeaderboard();
-    const completed = Math.max(0, levelsCompleted);
+    const completed = Math.max(0, Math.floor(levelsCompleted));
     let existing = lb.find(p => p.name.toLowerCase() === name.toLowerCase());
     if (existing) {
-      if (completed > existing.levelsCompleted) {
-        existing.levelsCompleted = completed;
-      }
+      if (completed > existing.levelsCompleted) existing.levelsCompleted = completed;
     } else {
       lb.push({ name: name, levelsCompleted: completed });
     }
@@ -316,13 +205,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const lb = getLeaderboard();
     const top10 = lb.slice(0, 10);
     let html = '<h2>🏆 Leaderboard</h2><p>Top 10 Players by Levels Completed</p><ul>';
-    if (top10.length === 0) {
-      html += '<li>No scores yet!</li>';
-    } else {
-      top10.forEach((p, i) => {
-        html += `<li>${i + 1}. ${p.name} - ${p.levelsCompleted} Levels</li>`;
-      });
-    }
+    if (top10.length === 0) html += '<li>No scores yet!</li>';
+    else top10.forEach((p,i) => html += `<li>${i+1}. ${p.name} - ${p.levelsCompleted} Levels</li>`);
     html += '</ul><button class="submit-btn" id="closeLb">Close</button>';
     const lbOverlay = document.createElement("div");
     lbOverlay.className = "overlay-card";
@@ -331,23 +215,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(lbOverlay);
     document.getElementById("closeLb").addEventListener("click", () => {
       lbOverlay.remove();
-      const gameOverEl = document.getElementById("gameOverOverlay");
-      if (gameOverEl) {
-        gameOverEl.style.display = "flex";
-      }
-      const winEl = document.getElementById("winOverlay");
-      if (winEl) {
-        winEl.style.display = "flex";
-      }
+      // Direct to home page on close
+      location.reload();
     });
   }
 
   leaderboardBtn.addEventListener("click", showLeaderboard);
 
+  // Start flow: ask for player name then init game
   startBtn.addEventListener("click", () => {
     document.getElementById("homeScreen").style.display = "none";
 
-    // Username Input Overlay
     const nameOverlay = document.createElement("div");
     nameOverlay.className = "overlay-card";
     nameOverlay.id = "nameOverlay";
@@ -364,41 +242,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     submitNameBtn.addEventListener("click", () => {
       const name = usernameInput.value.trim();
-      if (!name) {
-        alert("Please enter a username to start the game!");
-        return;
-      }
+      if (!name) { alert("Please enter a username to start the game!"); return; }
       playerName = name;
-
-      const playerData = {
-        name: playerName,
-        currentLevel: currentLevel,
-        maxLevel: maxLevel
-      };
-      localStorage.setItem('patinteroPlayer', JSON.stringify(playerData));
-
+      // Save a simple snapshot so a restart can access it if needed
+      localStorage.setItem('patinteroPlayer', JSON.stringify({ name: playerName }));
       nameOverlay.remove();
-
-      // Initialize Game
       initGame();
     });
 
-    // Allow Enter key for username
-    usernameInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        submitNameBtn.click();
-      }
-    });
+    usernameInput.addEventListener("keypress", (e) => { if (e.key === "Enter") submitNameBtn.click(); });
   });
 
   function initGame() {
+    // update screen dims in case of orientation change
     screenW = window.innerWidth;
     screenH = window.innerHeight;
 
     document.body.style.background = "url('playground.png') no-repeat center center fixed";
     document.body.style.backgroundSize = "cover";
 
-    // UI Elements
+    // top UI
     const uiLeft = document.createElement("div");
     uiLeft.id = "ui-left";
     uiLeft.className = "top-ui";
@@ -413,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updatePlayerInfo();
 
-    // Lines for blockers (from bottom to top)
+    // lines from bottom to top (5 lines)
     linesY = [
       screenH * 0.75,
       screenH * 0.60,
@@ -422,14 +285,15 @@ document.addEventListener("DOMContentLoaded", () => {
       screenH * 0.15
     ];
 
-    // player size constant for crossing/collision math
+    // player constants
     const PLAYER_SIZE = 64;
 
-    // === PLAYER SPRITE ===
+    // create player element
     const player = document.createElement("div");
     player.className = "Character";
-    x = screenW * 0.5;
-    y = screenH - 100; // start closer to bottom
+    // start in horizontal center, near bottom
+    let x = screenW * 0.5;
+    let y = screenH - 100;
     player.style.left = x + "px";
     player.style.top = y + "px";
     player.setAttribute("facing", "down");
@@ -439,11 +303,11 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(player);
 
-    // Create initial blockers & finish line
+    // create blockers and finish line for current level
     createBlockersForLevel(currentLevel);
     createFinishLine(currentLevel);
 
-    // === JOYSTICK SETUP (for mobile/touch devices) ===
+    // joystick for touch
     const joystick = document.createElement('div');
     joystick.id = 'joystick';
     const knob = document.createElement('div');
@@ -451,12 +315,11 @@ document.addEventListener("DOMContentLoaded", () => {
     joystick.appendChild(knob);
     document.body.appendChild(joystick);
 
-    // Show joystick on touch devices
-    if ('ontouchstart' in window) {
-      joystick.style.display = 'block';
-    }
+    // show joystick on touch devices
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) joystick.style.display = 'block';
 
-    // Joystick event handlers
+    // joystick handling
     const joystickElement = document.getElementById('joystick');
     const knobElement = document.getElementById('knob');
 
@@ -469,13 +332,13 @@ document.addEventListener("DOMContentLoaded", () => {
       joystickCenterY = rect.top + rect.height / 2;
       updateKnob(e.touches[0].clientX, e.touches[0].clientY);
       startJoystickMovement();
-    });
+    }, { passive: false });
 
     joystickElement.addEventListener('touchmove', (e) => {
       if (!joystickActive || gameEnded) return;
       e.preventDefault();
       updateKnob(e.touches[0].clientX, e.touches[0].clientY);
-    });
+    }, { passive: false });
 
     joystickElement.addEventListener('touchend', (e) => {
       if (gameEnded) return;
@@ -485,17 +348,15 @@ document.addEventListener("DOMContentLoaded", () => {
       currentDy = 0;
       knobElement.style.transform = 'translate(-50%, -50%)';
       stopJoystickMovement();
-    });
+    }, { passive: false });
 
     function updateKnob(touchX, touchY) {
       const deltaX = touchX - joystickCenterX;
       const deltaY = touchY - joystickCenterY;
       const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const maxDist = 30; // Max drag distance
-
+      const maxDist = 30; // max drag distance
       let normalizedDx = 0;
       let normalizedDy = 0;
-
       if (dist > maxDist) {
         const angle = Math.atan2(deltaY, deltaX);
         const clampedX = Math.cos(angle) * maxDist;
@@ -508,7 +369,6 @@ document.addEventListener("DOMContentLoaded", () => {
         normalizedDy = deltaY / maxDist;
         knobElement.style.transform = `translate(-50%, -50%) translate(${deltaX}px, ${deltaY}px)`;
       }
-
       currentDx = normalizedDx;
       currentDy = normalizedDy;
     }
@@ -516,170 +376,183 @@ document.addEventListener("DOMContentLoaded", () => {
     function startJoystickMovement() {
       if (joystickInterval) clearInterval(joystickInterval);
       joystickInterval = setInterval(() => {
-        if (!joystickActive || gameEnded) {
-          stopJoystickMovement();
-          return;
-        }
+        if (!joystickActive || gameEnded) { stopJoystickMovement(); return; }
         moveBasedOnJoystick();
-      }, 150); // Move every 150ms
+      }, 120);
     }
-
-    function stopJoystickMovement() {
-      if (joystickInterval) {
-        clearInterval(joystickInterval);
-        joystickInterval = null;
-      }
-    }
+    function stopJoystickMovement() { if (joystickInterval) { clearInterval(joystickInterval); joystickInterval = null; } }
 
     function moveBasedOnJoystick() {
       if (!joystickActive || gameEnded) return;
-
-      const threshold = 0.3;
+      const threshold = 0.25;
       let dx = 0, dy = 0, direction = 'face-down';
-
       if (Math.abs(currentDx) > threshold || Math.abs(currentDy) > threshold) {
         if (Math.abs(currentDy) > Math.abs(currentDx)) {
-          if (currentDy < -threshold) {
-            dy = -15;
-            direction = 'face-up';
-          } else if (currentDy > threshold) {
-            dy = 15;
-            direction = 'face-down';
-          }
+          if (currentDy < -threshold) { dy = -12; direction = 'face-up'; }
+          else if (currentDy > threshold) { dy = 12; direction = 'face-down'; }
         } else {
-          if (currentDx < -threshold) {
-            dx = -15;
-            direction = 'face-left';
-          } else if (currentDx > threshold) {
-            dx = 15;
-            direction = 'face-right';
-          }
-        }
-        movePlayer(dx, dy, direction);
+          if (currentDx < -threshold) { dx = -12; direction = 'face-left'; }
+          else if (currentDx > threshold) { dx = 12; direction = 'face-right'; }
+        }        movePlayer(dx, dy, direction);
       }
     }
 
-    // === PLAYER MOVEMENT ===
-    gameEnded = false;
+    // keyboard movement (desktop)
+    window.addEventListener("keydown", e => {
+      if (gameEnded) return;
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") movePlayer(-16, 0, "face-left");
+      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") movePlayer(16, 0, "face-right");
+      if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") movePlayer(0, -16, "face-up");
+      if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") movePlayer(0, 16, "face-down");
+    });
 
+    // Player movement implementation
     function movePlayer(dx, dy, direction) {
       if (gameEnded) return;
       x += dx;
       y += dy;
-      // Bounds
-      const playerSize = PLAYER_SIZE;
-      x = Math.max(0, Math.min(screenW - playerSize, x));
-      y = Math.max(0, Math.min(screenH - playerSize, y));
+      // bounds
+      x = Math.max(PLAYER_SIZE/2, Math.min(screenW - PLAYER_SIZE/2, x));
+      y = Math.max(PLAYER_SIZE/2, Math.min(screenH - PLAYER_SIZE/2, y));
       const sprite = player.querySelector(".Character_spritesheet");
-      sprite.className = `Character_spritesheet pixelart ${direction}`;
+      if (sprite) sprite.className = `Character_spritesheet pixelart ${direction}`;
       player.style.left = x + "px";
       player.style.top = y + "px";
     }
 
-    // Keyboard controls (desktop)
-    window.addEventListener("keydown", e => {
-      if (gameEnded) return;
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") movePlayer(-15, 0, "face-left");
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") movePlayer(15, 0, "face-right");
-      if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") movePlayer(0, -15, "face-up");
-      if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") movePlayer(0, 15, "face-down");
-    });
-
-    // Level Complete Announcement Function
+    // show level complete overlay
     function showLevelComplete() {
+      // Hide finish line during overlay
+      if (finishLine) finishLine.style.display = 'none';
       const overlay = document.getElementById('levelCompleteOverlay');
       const messageEl = document.getElementById('completeMessage');
-      messageEl.textContent = `Level ${currentLevel} Complete!`;
+      messageEl.textContent = `Complete: Level ${currentLevel}`;
       overlay.style.display = 'block';
-
+      // short pause then advance
       setTimeout(() => {
         overlay.style.display = 'none';
         currentLevel++;
+        // reset position
         x = screenW * 0.5;
         y = screenH - 100;
         player.style.left = x + "px";
         player.style.top = y + "px";
-        createBlockersForLevel(currentLevel);
-        createFinishLine(currentLevel);
-        updatePlayerInfo();
-        gameEnded = false;
-      }, 1500); // Show for 1.5 seconds
+        // prepare for next level (if any)
+        if (currentLevel <= maxLevel) {
+          createBlockersForLevel(currentLevel);
+          createFinishLine(currentLevel);
+          updatePlayerInfo();
+          gameEnded = false;
+        } else {
+          // player finished all levels
+          updatePlayerScore(playerName, maxLevel);
+          // Hide finish line for win
+          if (finishLine) finishLine.style.display = 'none';
+          showWinOverlay();
+        }
+      }, 1300);
     }
 
-    // === BLOCKER CHASE + GAME OVER ===
-    setInterval(() => {
+    // Win overlay
+    function showWinOverlay() {
+      const winScreen = document.createElement("div");
+      winScreen.className = "overlay-card";
+      winScreen.id = "winOverlay";
+      winScreen.innerHTML = `
+        <h2>🎉 YOU WIN!</h2>
+        <p>You completed all ${maxLevel} levels!</p>
+        <button class="submit-btn" id="playAgainBtn">🔁 Play Again</button>
+        <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button>
+      `;
+      document.body.appendChild(winScreen);
+      document.getElementById("playAgainBtn").addEventListener("click", () => location.reload());
+      document.getElementById("viewLbWin").addEventListener("click", () => {
+        winScreen.remove();
+        showLeaderboard();
+      });
+    }
+
+    // === Main game tick: blockers movement, collisions, crossing detection ===
+    const tickInterval = setInterval(() => {
       if (gameEnded) return;
 
-      // --- FIRST: check finish crossing (priority over collisions) ---
+      // crossing check (player reaching line for current level)
       const targetLineY = linesY[currentLevel - 1];
-      const PLAYER_SIZE_CONST = PLAYER_SIZE;
-      const playerCenterY = y + PLAYER_SIZE_CONST / 2;
-
-      if (typeof targetLineY !== 'undefined' && playerCenterY <= targetLineY && !gameEnded) {
-        // Player has crossed the finish line — finish BEFORE blockers can tag
+      const playerCenterY = y;
+      if (typeof targetLineY !== 'undefined' && playerCenterY <= targetLineY) {
+        // crossed before blockers tag
         gameEnded = true;
-        if (currentLevel < maxLevel) {
-          showLevelComplete();
-        } else {
-          updatePlayerScore(playerName, maxLevel);
-          const winScreen = document.createElement("div");
-          winScreen.className = "overlay-card";
-          winScreen.id = "winOverlay";
-          winScreen.innerHTML = `
-            <h2>🎉 YOU WIN!</h2>
-            <p>You completed all ${maxLevel} levels!</p>
-            <button class="submit-btn" onclick="location.reload()">🔁 Play Again</button>
-            <button id="viewLbWin" class="submit-btn">🏆 View Leaderboard</button>
-          `;
-          document.body.appendChild(winScreen);
-          document.getElementById("viewLbWin")?.addEventListener("click", () => {
-            const winEl = document.getElementById("winOverlay");
-            if (winEl) {
-              winEl.style.display = "none";
-            }
-            showLeaderboard();
-          });
-        }
-        return; // don't run blockers logic this tick
+        // advance or win handled by showLevelComplete
+        showLevelComplete();
+        return;
       }
 
-      // --- THEN: blockers move and collision checks ---
-      const playerX = x;
+      // blockers move & collision detection
       let tagged = false;
+      const playerCenterX = x;
+      const playerCenterYNow = y;
 
-      blockers.forEach(blk => {
-        const blockerX = parseInt(blk.style.left, 10);
-        const blockerY = parseInt(blk.style.top, 10);
-        const dx = playerX - blockerX;
-        const dy = y - blockerY;
-        const step = 16; // blocker speed (slightly slower)
+      blockers.forEach((blk, index) => {
+        // parse stored motion state
+        let blockerX = parseFloat(blk.style.left) || (screenW * 0.5);
+        const baseY = linesY[index] || (screenH * 0.5);
+        let phase = parseFloat(blk.dataset.phase) || 0;
+        let amplitude = parseFloat(blk.dataset.amp) || 40;
+        let speed = parseFloat(blk.dataset.speed) || 6;
 
-        let newBlockerX = blockerX;
+        // adapt speed by level and by touch device (slower on touch)
+        const speedFactor = isTouch ? 0.6 : 1;
+        const effectiveStep = Math.max(2, Math.round(speed * speedFactor + currentLevel * 0.6));
 
-        // Blocker moves left/right only
-        if (Math.abs(dx) > step) {
-          newBlockerX = blockerX + step * Math.sign(dx);
-          blk.style.left = newBlockerX + "px";
+        // Horizontal chase toward player (but with limited per-tick step) - constrain to screen bounds
+        const dx = playerCenterX - blockerX;
+        if (Math.abs(dx) > effectiveStep) {
+          blockerX += effectiveStep * Math.sign(dx);
+        } else {
+          blockerX = blockerX + dx; // small correction
         }
+        // Prevent blockers from going off-screen horizontally (assuming playground bounds are screen edges)
+        blockerX = Math.max(32, Math.min(screenW - 32, blockerX));
 
-        // Keep blocker on the line
+        // Zigzag vertical oscillation (so blocker looks like moving in zigzag pattern along the line) - but clamp to not pass white lines
+        phase += 0.08 + (index * 0.02);
+        let verticalOffset = Math.sin(phase + (Date.now() / 400)) * (amplitude * 0.25); // subtle
+        
+        // Dynamic clamp based on distance to adjacent lines to prevent crossing white lines in playground.png
+        const blockerSizeHalf = 16; // Half of blocker height (32px * pixel-size 2 = 64px, half 32, but conservative)
+        let upperBound = screenH; // Default upper (bottom of screen)
+        let lowerBound = 0; // Default lower (top of screen)
+        if (index > 0) {
+          upperBound = linesY[index - 1]; // Previous line (higher Y, below current)
+        }
+        if (index < linesY.length - 1) {
+          lowerBound = linesY[index + 1]; // Next line (lower Y, above current)
+        }
+        const distToUpper = Math.abs(baseY - upperBound);
+        const distToLower = Math.abs(baseY - lowerBound);
+        const maxVerticalOffset = Math.min(distToUpper, distToLower) / 2 - blockerSizeHalf;
+        verticalOffset = Math.max(-maxVerticalOffset, Math.min(maxVerticalOffset, verticalOffset));
+        
+        blk.dataset.phase = phase;
+
+        const blockerY = baseY + verticalOffset;
+
+        // Apply positions
+        blk.style.left = blockerX + "px";
         blk.style.top = blockerY + "px";
 
-        // Face towards player
+        // face toward player
+        const dy = playerCenterYNow - blockerY;
         let faceDir;
-        if (Math.abs(dy) > Math.abs(dx)) {
-          faceDir = dy > 0 ? "face-down" : "face-up";
-        } else {
-          faceDir = dx > 0 ? "face-right" : "face-left";
-        }
+        if (Math.abs(dy) > Math.abs(dx)) faceDir = dy > 0 ? "face-down" : "face-up";
+        else faceDir = dx > 0 ? "face-right" : "face-left";
         const sprite = blk.querySelector(".Character_spritesheet");
         if (sprite) sprite.className = `Character_spritesheet pixelart ${faceDir}`;
 
-        // Collision detection (using new position)
-        const distanceX = Math.abs(playerX - newBlockerX);
-        const distanceY = Math.abs(y - blockerY);
-        const collisionThreshold = 36; // slightly reduced threshold
-
+        // collision using centers (use player's center and blocker's center)
+        const distanceX = Math.abs(playerCenterX - blockerX);
+        const distanceY = Math.abs(playerCenterYNow - blockerY);
+        const collisionThreshold = 42; // tuned threshold
         if (distanceX < collisionThreshold && distanceY < collisionThreshold) {
           tagged = true;
         }
@@ -687,67 +560,85 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (tagged) {
         gameEnded = true;
-        updatePlayerScore(playerName, currentLevel - 1);
+        // Hide finish line on game over
+        if (finishLine) finishLine.style.display = 'none';
+        // save completed levels (player completed previous levels)
+        updatePlayerScore(playerName, Math.max(0, currentLevel - 1));
         const gameOver = document.createElement("div");
         gameOver.className = "overlay-card";
         gameOver.id = "gameOverOverlay";
         gameOver.innerHTML = `
           <h2>😵 GAME OVER!</h2>
-          <p>You were tagged at Level ${currentLevel}! (Completed: ${Math.max(0, currentLevel - 1)} levels)</p>
-          <button class="submit-btn" onclick="location.reload()">🔁 Restart</button>
+          <p>You were tagged at Level ${currentLevel}! (Completed: ${Math.max(0, currentLevel-1)} levels)</p>
+          <button class="submit-btn" id="restartBtn">🔁 Restart</button>
           <button id="viewLbAfter" class="submit-btn">🏆 View Leaderboard</button>
         `;
         document.body.appendChild(gameOver);
-        document.getElementById("viewLbAfter")?.addEventListener("click", () => {
-          const gameOverEl = document.getElementById("gameOverOverlay");
-          if (gameOverEl) {
-            gameOverEl.style.display = "none";
-          }
+        document.getElementById("restartBtn").addEventListener("click", () => location.reload());
+        document.getElementById("viewLbAfter").addEventListener("click", () => {
+          gameOver.remove();
           showLeaderboard();
         });
-        return;
       }
 
-      // (Win detection is handled above before blockers logic)
-    }, 200);
+    }, 180); // game tick frequency (lower = smoother, but heavier). 180ms is a good compromise.
+
+    // helper functions that need access to closure variables (player, linesY, blockers)
+    function createBlockersForLevel(level) {
+      // remove old blockers
+      blockers.forEach(b => b.remove());
+      blockers = [];
+      // clamp level to available lines
+      const safeLevel = Math.max(1, Math.min(level, linesY.length));
+      for (let i = 0; i < safeLevel; i++) {
+        const blocker = document.createElement("div");
+        blocker.className = "Character";
+        // initial X spread: distribute horizontally so they don't all stack - constrain to bounds
+        const spread = (i + 1) * 60;
+        let startX = (screenW * 0.5) + ((i % 2 === 0) ? -spread : spread);
+        startX = Math.max(32, Math.min(screenW - 32, startX));
+        blocker.style.left = startX + "px";
+        blocker.style.top = linesY[i] + "px";
+        blocker.setAttribute("facing", "down");
+        // attach some movement parameters per blocker
+        blocker.dataset.phase = Math.random() * Math.PI * 2;
+        blocker.dataset.amp = 28 + (i * 6);
+        blocker.dataset.speed = 4 + Math.random() * 4; // base speed
+        blocker.innerHTML = `
+          <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
+          <img class="Character_spritesheet pixelart face-down" src="blocker.png" />
+        `;
+        document.body.appendChild(blocker);
+        blockers.push(blocker);
+      }
+    }
+
+    function createFinishLine(level) {
+      if (finishLine) finishLine.remove();
+      const idx = Math.max(0, Math.min(level - 1, linesY.length - 1));
+      finishLine = document.createElement("div");
+      finishLine.className = "finish-line";
+      finishLine.style.top = Math.round(linesY[idx]) + "px";
+      document.body.appendChild(finishLine);
+    }
+
+    function updatePlayerInfo() {
+      const playerInfo = document.getElementById("playerInfo");
+      if (playerInfo) playerInfo.innerHTML = `${playerName}<br>Level ${currentLevel}/${maxLevel}`;
+    }
   } // end initGame
 
-  function createBlockersForLevel(level) {
-    blockers.forEach(blk => blk.remove());
-    blockers = [];
+  // createBlockersForLevel & createFinishLine are defined inside initGame's closure above,
+  // but we ensure the global references are available by declaring placeholders earlier if needed.
 
-    for (let i = 0; i < level; i++) {
-      const blocker = document.createElement("div");
-      blocker.className = "Character";
-      blocker.style.left = screenW * 0.5 + "px";
-      blocker.style.top = linesY[i] + "px";
-      blocker.setAttribute("facing", "down");
-      blocker.innerHTML = `
-        <img class="Character_shadow pixelart" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/21542/DemoRpgCharacterShadow.png" />
-        <img class="Character_spritesheet pixelart face-down" src="blocker.png" />
-      `;
-      document.body.appendChild(blocker);
-      blockers.push(blocker);
-    }
-  }
-
-  // FINISH LINE CREATOR
-  function createFinishLine(level) {
-    if (finishLine) finishLine.remove(); // remove previous line
-    finishLine = document.createElement("div");
-    finishLine.className = "finish-line";
-    finishLine.style.top = Math.round(linesY[level - 1]) + "px";
-    document.body.appendChild(finishLine);
-  }
-
-  function updatePlayerInfo() {
-    const playerInfo = document.getElementById("playerInfo");
-    if (playerInfo) {
-      playerInfo.innerHTML = `${playerName}<br>Level ${currentLevel}/${maxLevel}`;
-    }
+  // If the player reloads and localStorage contains a saved name, prefill home screen (optional)
+  const saved = JSON.parse(localStorage.getItem('patinteroPlayer') || 'null');
+  if (saved && saved.name) {
+    // show player's name subtly on home screen (not automatic start)
+    // You can uncomment this to auto-fill a future name input
+    // console.log('Saved player:', saved.name);
   }
 });
 </script>
 </body>
 </html>
-
